@@ -41,12 +41,19 @@ enum class TextureType {
     }
 }
 
+fun darkenColor(color: Color, factor: Float): Color{
+    val red = (color.red * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
+    val green = (color.green * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
+    val blue = (color.blue * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
+    return Color(red, green, blue)
+}
+
 @Composable
 fun SupraTextureCard(
     modifier: Modifier = Modifier,
     textureType: TextureType,
     backgroundColor: Color,
-    tint: Color,
+    tint: Color = darkenColor(backgroundColor, .2f),
     content: @Composable () -> Unit
 ) {
     // Random rotation angle

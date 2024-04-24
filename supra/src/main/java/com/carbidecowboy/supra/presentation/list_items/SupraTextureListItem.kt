@@ -27,7 +27,6 @@ fun SupraTextureListItem(
     rightIconImageVector: ImageVector? = null,
     textureType: TextureType,
     backgroundColor: Color,
-    tint: Color,
     onClick: (() -> Unit)? = null
 ) {
     SupraTextureCard(
@@ -37,7 +36,6 @@ fun SupraTextureListItem(
             },
         textureType = textureType,
         backgroundColor = backgroundColor,
-        tint = tint
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
