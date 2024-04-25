@@ -27,12 +27,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.carbidecowboy.supra.presentation.buttons.SupraHardwareButton
 import com.carbidecowboy.supra.presentation.cards.SupraTextureCard
 import com.carbidecowboy.supra.presentation.cards.TextureType
 import com.carbidecowboy.supra.presentation.list_items.SupraTextureListItem
 import com.carbidecowboy.supra.presentation.scaffolds.SupraGyroScaffold
 import com.carbidecowboy.supra.presentation.scaffolds.SupraScaffold
+import com.carbidecowboy.supraexample.domain.models.NavRoutes
 import com.carbidecowboy.supraexample.presentation.theme.SupraExampleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,75 +46,33 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SupraExampleTheme {
-                SupraScaffold( borderColor = Color.LightGray, backgroundColor = Color.DarkGray ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                SupraScaffold(borderColor = Color.LightGray, backgroundColor = Color.DarkGray) {
+
+                    val navController = rememberNavController()
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = NavRoutes.HomeScreen.route
                     ) {
-                        //Example Texture Card
-                        item {
-                            SupraTextureCard(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(160.dp),
-                                textureType = TextureType.TOPOGRAPHIC,
-                                backgroundColor = Color.Yellow,
-                            ) {
-
-                            }
-                        }
-
-                        //Example Texture List Item
-                        item {
-                            SupraTextureListItem(
-                                modifier = Modifier
-                                    .height(60.dp),
-                                title = "Big Poopies",
-                                leftIconImageVector = Icons.Default.Person,
-                                rightIconImageVector = Icons.Default.ChevronRight,
-                                textureType = TextureType.TOPOGRAPHIC,
-                                backgroundColor = Color.Gray
-                            ) {
-                                Toast.makeText(this@MainActivity, "Big Poopies", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-
-                        //Example Hardware Buttons
-                        item{
-                            Row (
-                                modifier = Modifier.fillMaxSize(),
-                                Arrangement.SpaceBetween
-                            ) {
-                                SupraHardwareButton(
-                                    modifier = Modifier
-                                        .size(100.dp),
-                                    buttonText = "GB",
-                                    backgroundColor = Color(0xFFE9D30E),
-                                ) {}
-                                SupraHardwareButton(
-                                    modifier = Modifier
-                                        .size(64.dp),
-                                    outerCornerRadius = 4.dp,
-                                    innerCornerRadius = 4.dp ,
-                                    buttonText = "Text",
-                                    backgroundColor = Color(0xFF04B4BA),
-                                ) {}
-                                SupraHardwareButton(
-                                    modifier = Modifier
-                                        .height(70.dp)
-                                        .width(150.dp),
-                                    outerCornerRadius = 16.dp,
-                                    innerCornerRadius = 8.dp ,
-                                    buttonText = "Text",
-                                    backgroundColor = Color(0xFFD8D4CF),
-                                ) {}
+                        composable(NavRoutes.HomeScreen.route) {
+                            HomeScreen(
+                                onCardsClicked = {
+                                    navController.navigate(NavRoutes.CardScreen.route)
+                                },
+                                onButtonsClicked = {
+                                    navController.navigate((NavRoutes.ButtonScreen.route))
                                 }
-                            }
+                            )
+                        }
+                        composable(NavRoutes.CardScreen.route) {
+                            CardScreen()
+                        }
+                        composable(NavRoutes.ButtonScreen.route) {
+                            ButtonScreen()
                         }
                     }
                 }
             }
         }
     }
+}
