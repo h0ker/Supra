@@ -47,7 +47,7 @@ fun SupraTextureListItem(
             ) {
                 leftIconId?.let { iconId ->
                     Icon(
-                        modifier = Modifier.padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(start = 8.dp),
                         painter = painterResource(id = iconId),
                         contentDescription = "left icon"
                     )
@@ -60,6 +60,7 @@ fun SupraTextureListItem(
                     )
                 }
                 Text(
+                    modifier = Modifier.padding(start = 8.dp),
                     text = title
                 )
             }
