@@ -37,13 +37,13 @@ fun SupraHardwareButton(
             modifier = Modifier
                 .fillMaxSize(fraction = 0.8f)
                 .shadow(
-                    color= Color(0x40FFFFFF),
+                    color = Color(0x40FFFFFF),
                     offsetX = (-4).dp,
                     offsetY = (-4).dp,
                     blurRadius = 8.dp
                 )
                 .shadow(
-                    color= Color(0x2E000000),
+                    color = Color(0x2E000000),
                     offsetX = (4).dp,
                     offsetY = (4).dp,
                     blurRadius = 8.dp

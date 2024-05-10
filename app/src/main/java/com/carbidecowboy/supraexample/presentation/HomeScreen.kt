@@ -26,7 +26,8 @@ import com.carbidecowboy.supra.presentation.list_items.SupraTextureListItem
 @Composable
 fun HomeScreen(
     onCardsClicked: () -> Unit,
-    onButtonsClicked: () -> Unit
+    onButtonsClicked: () -> Unit,
+    onEntriesClicked: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -57,6 +58,18 @@ fun HomeScreen(
                 backgroundColor = Color.Gray
             ) {
                 onButtonsClicked()
+            }
+        }
+        item {
+            SupraTextureListItem(
+                modifier = Modifier
+                    .height(60.dp),
+                title = "Entries",
+                rightIconImageVector = Icons.Default.ChevronRight,
+                textureType = TextureType.TOPOGRAPHIC,
+                backgroundColor = Color.Gray
+            ) {
+                onEntriesClicked()
             }
         }
     }

@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SupraExampleTheme {
-                SupraScaffold(borderColor = Color.LightGray, backgroundColor = Color.DarkGray) {
+                SupraScaffold(borderColor = Color.LightGray, backgroundColor = Color(0xffe5e5e5)) {
 
                     val navController = rememberNavController()
 
@@ -61,7 +61,11 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onButtonsClicked = {
                                     navController.navigate((NavRoutes.ButtonScreen.route))
-                                }
+                                },
+                                onEntriesClicked = {
+                                    navController.navigate((NavRoutes.EntryScreen.route))
+                                },
+
                             )
                         }
                         composable(NavRoutes.CardScreen.route) {
@@ -69,6 +73,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(NavRoutes.ButtonScreen.route) {
                             ButtonScreen()
+                        }
+                        composable(NavRoutes.EntryScreen.route) {
+                            EntryScreen()
                         }
                     }
                 }
