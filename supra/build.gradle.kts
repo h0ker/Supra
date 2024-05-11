@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
     id("maven-publish")
 }
 
@@ -60,7 +60,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("com.google.android.material:material:1.11.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
@@ -73,7 +73,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.CarbideCowboy"
                 artifactId = "Supra"
-                version = "0.0.1"
+                version = "0.0.2"
             }
         }
     }
