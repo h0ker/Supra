@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.carbidecowboy.supra.R
+import com.carbidecowboy.supra.utils.ColorUtils.Companion.darkenColor
 import kotlin.random.Random
 
 enum class TextureType {
@@ -39,13 +40,6 @@ enum class TextureType {
             }
         }
     }
-}
-
-fun darkenColor(color: Color, factor: Float): Color{
-    val red = (color.red * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
-    val green = (color.green * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
-    val blue = (color.blue * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
-    return Color(red, green, blue)
 }
 
 @Composable
