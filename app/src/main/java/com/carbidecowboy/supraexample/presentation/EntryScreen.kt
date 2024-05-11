@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.carbidecowboy.supra.presentation.entries.SupraTextEntry
 
@@ -25,8 +24,7 @@ fun EntryScreen() {
           .padding(16.dp)
     ) {
         SupraTextEntry(
-            modifier = Modifier.height(80.dp),
-            backgroundColor = Color.Gray,
+            modifier = Modifier.height(60.dp),
             value = entry1Content,
             onValueChanged = { text ->
                 entry1Content = text
