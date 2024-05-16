@@ -73,7 +73,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.CarbideCowboy"
                 artifactId = "Supra"
-                version = "0.0.3"
+                version = "0.0.4"
             }
         }
     }

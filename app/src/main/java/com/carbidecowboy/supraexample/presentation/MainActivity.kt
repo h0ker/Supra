@@ -25,8 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +39,7 @@ import com.carbidecowboy.supra.presentation.cards.TextureType
 import com.carbidecowboy.supra.presentation.list_items.SupraTextureListItem
 import com.carbidecowboy.supra.presentation.scaffolds.SupraGyroScaffold
 import com.carbidecowboy.supra.presentation.scaffolds.SupraScaffold
+import com.carbidecowboy.supraexample.R
 import com.carbidecowboy.supraexample.domain.models.NavRoutes
 import com.carbidecowboy.supraexample.presentation.theme.SupraExampleTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,8 +49,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+            val titleFont = FontFamily(Font(com.carbidecowboy.supra.R.font.univers_light))
+
             SupraExampleTheme {
-                SupraScaffold(borderColor = Color.LightGray, backgroundColor = Color.DarkGray) {
+                SupraGyroScaffold(
+                    borderColor = Color.LightGray,
+                    backgroundColor = Color.DarkGray,
+                    topBar = {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = "SUPRA",
+                                fontFamily = titleFont,
+                                fontSize = 32.sp,
+                                color = Color.Black
+                            )
+                        }
+                    }
+                ) {
 
                     val navController = rememberNavController()
 

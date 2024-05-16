@@ -23,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun SupraGyroScaffold(
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
+    borderColor: Color,
+    backgroundColor: Color,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
@@ -41,7 +43,7 @@ fun SupraGyroScaffold(
         bottomBar = {
             bottomBar?.invoke()
         },
-        containerColor = Color.LightGray
+        containerColor = borderColor
     ) { paddingValues ->
         Box(
             modifier = Modifier.padding(paddingValues),
@@ -58,7 +60,7 @@ fun SupraGyroScaffold(
                         .padding(vertical = 16.dp, horizontal = 8.dp)
                         .shadow(elevation = 3.dp, shape = RoundedCornerShape(16.dp))
                         .clip(RoundedCornerShape(16.dp)),
-                    color = Color.DarkGray
+                    color = backgroundColor
                 ) {
                     content(
                         Modifier
