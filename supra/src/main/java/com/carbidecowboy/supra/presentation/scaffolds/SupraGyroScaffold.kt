@@ -51,7 +51,7 @@ fun SupraGyroScaffold(
         ) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = Color.LightGray
+                color = borderColor
             ) {
                 Surface(
                     modifier = Modifier
