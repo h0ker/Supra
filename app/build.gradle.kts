@@ -13,8 +13,8 @@ android {
         applicationId = "com.carbidecowboy.supraexample"
         minSdk = 28
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.0.5"
+        versionCode = 6
+        versionName = "0.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
