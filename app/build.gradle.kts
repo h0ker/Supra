@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.carbidecowboy.supraexample"
+    namespace = "com.hoker.supraexample"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.carbidecowboy.supraexample"
+        applicationId = "com.hoker.supraexample"
         minSdk = 28
-        targetSdk = 34
-        versionCode = 6
-        versionName = "0.0.6"
+        targetSdk = 35
+        versionCode = 7
+        versionName = "0.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

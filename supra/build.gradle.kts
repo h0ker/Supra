@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.carbidecowboy.supra"
+    namespace = "com.hoker.supra"
     compileSdk = 34
 
     defaultConfig {
@@ -71,9 +71,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
-                groupId = "com.github.CarbideCowboy"
+                groupId = "com.github.hoker"
                 artifactId = "Supra"
-                version = "0.0.6"
+                version = "0.0.7"
             }
         }
     }
