@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun SupraGyroScaffold(
+    modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     borderColor: Color,
@@ -37,6 +38,7 @@ fun SupraGyroScaffold(
     val animatedYOffset = animateDpAsState(targetValue = yOffset.dp, label = "")
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             topBar?.invoke()
         },

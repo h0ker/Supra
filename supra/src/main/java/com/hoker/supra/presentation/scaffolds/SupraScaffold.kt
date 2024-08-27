@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SupraScaffold(
+    modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     borderColor: Color,
@@ -25,6 +26,7 @@ fun SupraScaffold(
     content: @Composable (modifier: Modifier) -> Unit
 ){
     Scaffold (
+        modifier = modifier,
         topBar = {
             topBar?.invoke()
         },
