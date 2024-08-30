@@ -1,5 +1,6 @@
 package com.hoker.supra.presentation.cards
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.hoker.supra.R
@@ -57,6 +59,7 @@ fun SupraTextureCard(
 ) {
     // Random rotation angle
     val rotationAngle = remember { Random.nextInt(2) * 180f }
+    val backgroundId = remember { textureType.getTextureId() }
 
     Box(
         modifier = modifier
@@ -65,7 +68,7 @@ fun SupraTextureCard(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = textureType.getTextureId()),
+            painter = painterResource(backgroundId),
             contentDescription = "Tinted and Rotated Square Image",
             colorFilter = ColorFilter.tint(tint),
             modifier = Modifier
