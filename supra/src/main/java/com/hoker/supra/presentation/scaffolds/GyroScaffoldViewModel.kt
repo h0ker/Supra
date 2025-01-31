@@ -14,7 +14,7 @@ import kotlin.math.abs
 @HiltViewModel
 class GyroScaffoldViewModel @Inject constructor(
     private val sensorManager: SensorManager,
-    accelerometer: Sensor?
+    gyroscope: Sensor?
 ) : ViewModel(), SensorEventListener {
 
     companion object {
@@ -26,7 +26,7 @@ class GyroScaffoldViewModel @Inject constructor(
     val translationData = _translationData.asStateFlow()
 
     init {
-        accelerometer?.let {
+        gyroscope?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
         }
     }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +35,9 @@ class MainActivity : ComponentActivity() {
                     backgroundColor = Color.DarkGray,
                     topBar = {
                         Row(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                            modifier = Modifier
+                                .statusBarsPadding()
+                                .padding(horizontal = 16.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = "SUPRA",

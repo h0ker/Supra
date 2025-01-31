@@ -17,5 +17,5 @@ object SensorModule {
     fun provideSensorManager(@ApplicationContext context: Context): SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     @Provides
-    fun provideAccelerometerSensor(sensorManager: SensorManager): Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+    fun provideGyroscopeSensor(sensorManager: SensorManager): Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 }

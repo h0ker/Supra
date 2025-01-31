@@ -1,20 +1,21 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.hoker.supraexample"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.hoker.supraexample"
-        minSdk = 28
+        minSdk = 30
         targetSdk = 35
-        versionCode = 9
-        versionName = "0.0.9"
+        versionCode = 10
+        versionName = "0.0.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -32,17 +33,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+    kotlinOptions {
+        jvmTarget = "11"
     }
     packaging {
         resources {
@@ -60,7 +58,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,10 +66,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material3)
+    implementation(libs.material2)
     implementation(project(":supra"))
 }

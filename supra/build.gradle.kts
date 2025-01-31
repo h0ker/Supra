@@ -1,17 +1,18 @@
 plugins {
-    id("com.android.library")
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     id("maven-publish")
 }
 
 android {
     namespace = "com.hoker.supra"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,14 +30,11 @@ android {
         compose = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
@@ -58,12 +56,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.dagger:hilt-android:2.48")
-    implementation("com.google.android.material:material:1.11.0")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material3)
+    implementation(libs.material2)
 }
 
 afterEvaluate {
@@ -73,7 +71,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.hoker"
                 artifactId = "Supra"
-                version = "0.0.9"
+                version = "0.0.10"
             }
         }
     }
