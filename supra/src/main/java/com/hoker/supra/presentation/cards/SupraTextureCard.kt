@@ -20,10 +20,14 @@ import kotlin.random.Random
 
 enum class TextureType {
 
+    SLATE,
     TOPOGRAPHIC;
 
     fun getTextureId(): Int {
         return when(this) {
+            SLATE -> {
+                R.drawable.slate
+            }
             TOPOGRAPHIC -> {
                 val imageIndex = Random.nextInt(6)
                 when (imageIndex) {

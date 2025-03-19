@@ -24,33 +24,67 @@ fun CardScreen() {
     val apexFont = FontFamily(Font(com.hoker.supra.R.font.apex_font))
     val universFont = FontFamily(Font(com.hoker.supra.R.font.univers_light))
 
-    SupraTextureCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp)
-            .padding(16.dp),
-        textureType = TextureType.TOPOGRAPHIC,
-        backgroundColor = Color(0xFF293239),
-        tint = Color(0xFF42667E)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        SupraTextureCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .padding(16.dp),
+            textureType = TextureType.TOPOGRAPHIC,
+            backgroundColor = Color(0xFF293239),
+            tint = Color(0xFF42667E)
         ) {
-            Text(
-                text = "SUPRA",
-                color = Color.White,
-                fontFamily = apexFont,
-                fontSize = 64.sp
-            )
-            Text(
-                text = "Design System",
-                color = Color.White,
-                fontSize = 12.sp,
-                fontStyle = FontStyle.Italic,
-                fontFamily = universFont
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "SUPRA",
+                    color = Color.White,
+                    fontFamily = apexFont,
+                    fontSize = 64.sp
+                )
+                Text(
+                    text = "Design System",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    fontStyle = FontStyle.Italic,
+                    fontFamily = universFont
+                )
+            }
+        }
+
+        SupraTextureCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .padding(16.dp),
+            textureType = TextureType.SLATE,
+            backgroundColor = Color(0xFF293239),
+            tint = Color(0xFF42667E)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "SUPRA",
+                    color = Color.White,
+                    fontFamily = apexFont,
+                    fontSize = 64.sp
+                )
+                Text(
+                    text = "Design System",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    fontStyle = FontStyle.Italic,
+                    fontFamily = universFont
+                )
+            }
         }
     }
 }

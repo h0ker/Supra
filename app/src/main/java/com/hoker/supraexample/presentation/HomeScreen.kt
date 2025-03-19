@@ -1,32 +1,25 @@
 package com.hoker.supraexample.presentation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.hoker.supra.presentation.buttons.SupraHardwareButton
-import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.list_items.SupraTextureListItem
+import com.hoker.supraexample.domain.models.NavRoute
 
 @Composable
 fun HomeScreen(
-    onCardsClicked: () -> Unit,
-    onButtonsClicked: () -> Unit
+    optionList: List<NavRoute>,
+    onOptionClicked: (NavRoute) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -34,29 +27,16 @@ fun HomeScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        //Example Texture List Item
-        item {
+        items(optionList) { optionRoute ->
             SupraTextureListItem(
                 modifier = Modifier
                     .height(60.dp),
-                title = "Cards",
+                title = optionRoute.pageTitle,
                 rightIconImageVector = Icons.Default.ChevronRight,
                 textureType = TextureType.TOPOGRAPHIC,
                 backgroundColor = Color.Gray
             ) {
-                onCardsClicked()
-            }
-        }
-        item {
-            SupraTextureListItem(
-                modifier = Modifier
-                    .height(60.dp),
-                title = "Buttons",
-                rightIconImageVector = Icons.Default.ChevronRight,
-                textureType = TextureType.TOPOGRAPHIC,
-                backgroundColor = Color.Gray
-            ) {
-                onButtonsClicked()
+                onOptionClicked(optionRoute)
             }
         }
     }

@@ -14,8 +14,8 @@ android {
         applicationId = "com.hoker.supraexample"
         minSdk = 30
         targetSdk = 35
-        versionCode = 11
-        versionName = "0.0.11"
+        versionCode = 101
+        versionName = "0.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -73,4 +73,5 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.material2)
     implementation(project(":supra"))
+    implementation(kotlin("reflect"))
 }
