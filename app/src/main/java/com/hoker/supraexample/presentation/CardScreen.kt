@@ -1,5 +1,6 @@
 package com.hoker.supraexample.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,12 @@ import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 
 @Composable
-fun CardScreen() {
+fun CardScreen(
+    onBack: () -> Unit
+) {
+    BackHandler {
+        onBack()
+    }
 
     val apexFont = FontFamily(Font(com.hoker.supra.R.font.apex_font))
     val universFont = FontFamily(Font(com.hoker.supra.R.font.univers_light))

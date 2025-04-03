@@ -1,5 +1,6 @@
 package com.hoker.supraexample.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.hoker.supra.presentation.buttons.SupraHardwareButton
 
 @Composable
-fun ButtonScreen() {
+fun ButtonScreen(
+    onBack: () -> Unit
+) {
+    BackHandler {
+        onBack()
+    }
+
     //Example Hardware Buttons
     Row (
         modifier = Modifier

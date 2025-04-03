@@ -1,5 +1,6 @@
 package com.hoker.supraexample.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,9 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.hoker.supra.presentation.entries.SupraTextField
 
 @Composable
-fun EntriesScreen() {
+fun EntriesScreen(
+    onBack: () -> Unit
+) {
+    BackHandler {
+        onBack()
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -36,33 +44,4 @@ fun EntriesScreen() {
             )
         }
     }
-}
-
-@Composable
-fun SupraTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    label: String,
-    singleLine: Boolean = false,
-    focusedBorderColor: Color = MaterialTheme.colorScheme.secondary,
-    unfocusedBorderColor: Color = MaterialTheme.colorScheme.primary,
-    visualTransformation: VisualTransformation? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    trailingIcon: (@Composable () -> Unit)? = null,
-    onValueChange: (String) -> Unit,
-) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = value,
-        singleLine = singleLine,
-        trailingIcon = trailingIcon,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = focusedBorderColor,
-            unfocusedBorderColor = unfocusedBorderColor
-        ),
-        label = { Text(label) },
-        onValueChange = { onValueChange(it) },
-        visualTransformation = visualTransformation ?: VisualTransformation.None,
-        keyboardOptions = keyboardOptions
-    )
 }
