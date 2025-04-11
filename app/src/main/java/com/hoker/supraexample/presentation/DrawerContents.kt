@@ -17,6 +17,7 @@ import com.hoker.supraexample.domain.models.NavRoute
 
 @Composable
 fun DrawerContent(
+    closeDrawer: () -> Unit,
     optionsList: List<NavRoute>,
     onOptionSelected: (NavRoute) -> Unit
 ) {
@@ -34,6 +35,7 @@ fun DrawerContent(
                 backgroundColor = Color.Gray
             ) {
                 onOptionSelected(optionRoute)
+                closeDrawer()
             }
         }
     }

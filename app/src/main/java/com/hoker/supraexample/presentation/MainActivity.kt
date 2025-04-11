@@ -25,12 +25,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.list_items.SupraTextureListItem
 import com.hoker.supra.presentation.scaffolds.SupraGyroScaffold
+import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supraexample.domain.models.NavRoute
 import com.hoker.supraexample.presentation.theme.SupraExampleTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,40 +45,28 @@ class MainActivity : ComponentActivity() {
             enableEdgeToEdge()
             val titleFont = FontFamily(Font(com.hoker.supra.R.font.univers_light))
             var titleText by remember { mutableStateOf(NavRoute.HomeScreen.pageTitle) }
-            var isDrawerOpen by remember { mutableStateOf(false) }
             val navController = rememberNavController()
 
             SupraExampleTheme {
-                SupraGyroScaffold(
-                    borderColor = Color.LightGray,
-                    backgroundColor = Color.DarkGray,
+                SupraScaffold(
                     topBar = {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.clickable {
-                                    isDrawerOpen = !isDrawerOpen
-                                },
-                                text = titleText,
-                                fontFamily = titleFont,
-                                fontSize = 32.sp,
-                                color = Color.Black
-                            )
-                        }
+                        Text(
+                            text = titleText,
+                            fontFamily = titleFont,
+                            fontSize = 32.sp,
+                            color = Color.Black
+                        )
                     },
-                    isDrawerOpen = isDrawerOpen,
-                    drawerContent = {
+                    drawerContent = { closeDrawer ->
                         DrawerContent(
+                            closeDrawer = closeDrawer,
                             optionsList = NavRoute.menuOptions,
                             onOptionSelected = { optionRoute ->
-                                navController.navigate(optionRoute.route)
-                                isDrawerOpen = false
+                                navController.replaceCurrentRoute(optionRoute.route)
                             }
                         )
                     }
                 ) {
-
                     NavHost(
                         navController = navController,
                         startDestination = NavRoute.HomeScreen.route
@@ -107,5 +97,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+fun NavController.replaceCurrentRoute(route: String) {
+    this.navigate(route) {
+        if (this@replaceCurrentRoute.currentDestination?.route != NavRoute.HomeScreen.route) {
+            popUpTo(this@replaceCurrentRoute.currentDestination?.route ?: "") {
+                inclusive = true
+            }
+        }
+        launchSingleTop = true
     }
 }

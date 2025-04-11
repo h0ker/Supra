@@ -1,23 +1,12 @@
 package com.hoker.supra.presentation.scaffolds
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,19 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hoker.supra.presentation.sizes.Sizes
 
 @Composable
 fun SupraGyroScaffold(
     modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
-    drawerContent: (@Composable () -> Unit)? = null,
-    drawerWidth: Dp = Sizes.defaultDrawerWidth,
-    isDrawerOpen: Boolean = false,
     borderColor: Color,
     backgroundColor: Color,
     content: @Composable (modifier: Modifier) -> Unit
@@ -55,37 +39,13 @@ fun SupraGyroScaffold(
     val animatedXOffset = animateDpAsState(targetValue = xOffset.dp, label = "")
     val animatedYOffset = animateDpAsState(targetValue = yOffset.dp, label = "")
 
-    val drawerOffset by animateDpAsState(
-        targetValue = if (drawerContent != null && isDrawerOpen) drawerWidth else 0.dp,
-        animationSpec = tween(
-            durationMillis = 500,
-            easing = FastOutSlowInEasing
-        )
-    )
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(borderColor)
     ) {
-        if (drawerContent != null) {
-            Box(
-                modifier = Modifier
-                    .width(drawerWidth)
-                    .statusBarsPadding()
-                    .fillMaxHeight()
-                    .background(borderColor)
-                    .offset(x = drawerOffset - drawerWidth)
-            ) {
-                Column {
-                    drawerContent()
-                }
-            }
-        }
         Scaffold(
-            modifier = Modifier
-                .statusBarsPadding()
-                .offset(x = drawerOffset),
+            modifier = Modifier.statusBarsPadding(),
             topBar = {
                 topBar?.invoke()
             },

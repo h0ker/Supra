@@ -1,54 +1,98 @@
 package com.hoker.supra.presentation.scaffolds
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SupraScaffold(
     modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
-    borderColor: Color,
-    backgroundColor: Color,
+    drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
+    borderColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
     content: @Composable (modifier: Modifier) -> Unit
 ){
-    Scaffold (
-        modifier = modifier,
-        topBar = {
-            topBar?.invoke()
-        },
-        bottomBar = {
-            bottomBar?.invoke()
-        },
-        containerColor = borderColor
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier.padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ){
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-                    .shadow(elevation = 3.dp, shape = RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp)),
-                color = backgroundColor
-            ){
-                content( Modifier.padding(8.dp) )
+    if (drawerContent != null) {
+
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+
+        val closeDrawer: () -> Unit = {
+            scope.launch {
+                drawerState.close()
             }
         }
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet(
+                    drawerContainerColor = borderColor
+                ) {
+                    drawerContent(closeDrawer)
+                }
+            }
+        ) {
+            SupraGyroScaffold(
+                modifier = modifier,
+                topBar = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = borderColor
+                            ),
+                            title = {
+                                topBar?.invoke()
+                            },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Menu, contentDescription = "Menu")
+                                }
+                            }
+                        )
+                    }
+                },
+                bottomBar = bottomBar,
+                borderColor = borderColor,
+                backgroundColor = backgroundColor,
+                content = content
+            )
+        }
+    } else {
+        SupraGyroScaffold(
+            modifier = modifier,
+            topBar = topBar,
+            bottomBar = bottomBar,
+            borderColor = borderColor,
+            backgroundColor = backgroundColor,
+            content = content
+        )
     }
 }
