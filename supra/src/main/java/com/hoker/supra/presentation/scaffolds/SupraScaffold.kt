@@ -27,8 +27,8 @@ fun SupraScaffold(
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
-    borderColor: Color = MaterialTheme.colorScheme.background,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    borderColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable (modifier: Modifier) -> Unit
 ){
     if (drawerContent != null) {
