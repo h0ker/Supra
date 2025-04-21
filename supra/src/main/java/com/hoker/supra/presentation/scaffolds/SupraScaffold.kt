@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,8 +28,11 @@ fun SupraScaffold(
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
-    borderColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
+    surfaceColor: Color = MaterialTheme.colorScheme.surface,
+    oneshotChannel: ReceiveChannel<Color>? = null,
+    loadingColor: Color = Color.Yellow,
+    isLoading: Boolean = false,
     content: @Composable (modifier: Modifier) -> Unit
 ){
     if (drawerContent != null) {
@@ -46,7 +50,7 @@ fun SupraScaffold(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = borderColor
+                    drawerContainerColor = backgroundColor
                 ) {
                     drawerContent(closeDrawer)
                 }
@@ -54,13 +58,14 @@ fun SupraScaffold(
         ) {
             SupraGyroScaffold(
                 modifier = modifier,
+                isLoading = isLoading,
                 topBar = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TopAppBar(
                             colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = borderColor
+                                containerColor = Color.Transparent
                             ),
                             title = {
                                 topBar?.invoke()
@@ -79,9 +84,11 @@ fun SupraScaffold(
                         )
                     }
                 },
+                oneshotChannel = oneshotChannel,
                 bottomBar = bottomBar,
-                borderColor = borderColor,
                 backgroundColor = backgroundColor,
+                surfaceColor = surfaceColor,
+                loadingColor = loadingColor,
                 content = content
             )
         }
@@ -90,8 +97,9 @@ fun SupraScaffold(
             modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
-            borderColor = borderColor,
             backgroundColor = backgroundColor,
+            surfaceColor = backgroundColor,
+            loadingColor = loadingColor,
             content = content
         )
     }

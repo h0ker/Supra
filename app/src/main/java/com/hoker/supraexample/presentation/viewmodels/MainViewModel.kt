@@ -2,6 +2,7 @@ package com.hoker.supraexample.presentation.viewmodels
 
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
+import com.hoker.supra.presentation.fx.SupraFX
 import com.hoker.supraexample.domain.models.Consts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    val supraFX: SupraFX
 ): ViewModel() {
 
     private val _isDarkModeEnabled: MutableStateFlow<Boolean> = MutableStateFlow(sharedPreferences.getBoolean(Consts.DARK_MODE_ENABLED, false))

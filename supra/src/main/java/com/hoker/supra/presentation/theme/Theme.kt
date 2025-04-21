@@ -16,28 +16,28 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Primary,
-    primaryContainer = PrimaryVariant,
-    secondary = ForegroundGray,
-    secondaryContainer = SecondaryVariant,
-    error = ErrorRed,
-    background = Background
+    primary = PrimaryDark,
+    secondary = SecondaryDark,
+    surface = SurfaceDark,
+    background = BackgroundDark,
+    tertiary = TertiaryDark,
+    error = ErrorRed
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryVariant,
-    primaryContainer = Primary,
-    secondary = SecondaryVariant,
-    secondaryContainer = ForegroundGray,
-    error = ErrorRed,
-    background = Color.White
+    primary = PrimaryDark,
+    secondary = SecondaryDark,
+    surface = SurfaceDark,
+    background = BackgroundDark,
+    tertiary = ValidGreen,
+    error = ErrorRed
 )
 
 @Composable
 fun SupraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

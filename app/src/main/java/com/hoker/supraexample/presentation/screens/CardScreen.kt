@@ -1,4 +1,4 @@
-package com.hoker.supraexample.presentation
+package com.hoker.supraexample.presentation.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hoker.supra.R
 import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 
@@ -27,8 +28,8 @@ fun CardScreen(
         onBack()
     }
 
-    val apexFont = FontFamily(Font(com.hoker.supra.R.font.apex_font))
-    val universFont = FontFamily(Font(com.hoker.supra.R.font.univers_light))
+    val apexFont = FontFamily(Font(R.font.apex_font))
+    val universFont = FontFamily(Font(R.font.univers_light))
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally

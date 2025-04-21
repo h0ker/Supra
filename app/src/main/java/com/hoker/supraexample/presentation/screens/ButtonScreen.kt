@@ -1,4 +1,4 @@
-package com.hoker.supraexample.presentation
+package com.hoker.supraexample.presentation.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
