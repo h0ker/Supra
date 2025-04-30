@@ -1,2 +1,5 @@
 <resources>
+    <string name="scan_device_desc">Scan your VivoKey</string>
+    <string name="hold_still">Hold still</string>
+    <string name="cancel">Cancel</string>
 </resources>

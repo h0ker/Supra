@@ -5,6 +5,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import androidx.lifecycle.ViewModel
+import com.hoker.supra.presentation.fx.SupraFX
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,8 @@ import kotlin.math.abs
 @HiltViewModel
 class GyroScaffoldViewModel @Inject constructor(
     private val sensorManager: SensorManager,
-    gyroscope: Sensor?
+    gyroscope: Sensor?,
+    val supraFX: SupraFX
 ) : ViewModel(), SensorEventListener {
 
     companion object {

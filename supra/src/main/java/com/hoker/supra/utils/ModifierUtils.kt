@@ -1,5 +1,6 @@
 package com.hoker.supra.utils
 
+import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.dp
 
 class ModifierUtils {
     companion object {
+        @SuppressLint("SuspiciousModifierThen")
         fun Modifier.shadow(
             color: Color = Color.Black,
             offsetX: Dp = 0.dp,

@@ -25,8 +25,7 @@ fun DialogScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(Sizes.medium),
-        verticalArrangement = Arrangement.spacedBy(Sizes.medium),
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.spacedBy(Sizes.medium)
     ) {
         Button(
             onClick = {

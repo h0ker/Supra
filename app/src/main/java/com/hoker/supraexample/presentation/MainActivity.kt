@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.ModeNight
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,24 +19,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
-import com.hoker.supra.presentation.sizes.FontSizes
+import com.hoker.supra.presentation.text.SupraTitleTextMedium
 import com.hoker.supra.presentation.theme.SupraTheme
 import com.hoker.supraexample.domain.models.NavRoute
 import com.hoker.supraexample.presentation.screens.ButtonScreen
-import com.hoker.supraexample.presentation.screens.CardScreen
+import com.hoker.supraexample.presentation.screens.TextureScreen
 import com.hoker.supraexample.presentation.screens.ColorScreen
 import com.hoker.supraexample.presentation.screens.DialogScreen
 import com.hoker.supraexample.presentation.screens.EntriesScreen
 import com.hoker.supraexample.presentation.screens.HomeScreen
+import com.hoker.supraexample.presentation.screens.PickersScreen
 import com.hoker.supraexample.presentation.screens.SupraFXScreen
+import com.hoker.supraexample.presentation.screens.TextScreen
 import com.hoker.supraexample.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,14 +46,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             enableEdgeToEdge()
-            val titleFont = FontFamily(Font(com.hoker.supra.R.font.univers_light))
             var titleText by remember { mutableStateOf(NavRoute.HomeScreen.pageTitle) }
             val navController = rememberNavController()
 
             val mainViewModel: MainViewModel = hiltViewModel()
 
             val isDarkModeEnabled = mainViewModel.isDarkModeEnabled.collectAsState()
-            val isLoading = mainViewModel.supraFX.isLoading.collectAsState()
 
             SupraTheme(
                 darkTheme = isDarkModeEnabled.value
@@ -66,10 +63,8 @@ class MainActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                text = titleText,
-                                fontFamily = titleFont,
-                                fontSize = FontSizes.large
+                            SupraTitleTextMedium(
+                                text = titleText
                             )
                             IconButton(
                                 onClick = {
@@ -92,8 +87,6 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     },
-                    oneshotChannel = mainViewModel.supraFX.oneshotChannel,
-                    isLoading = isLoading.value
                 ) {
                     NavHost(
                         navController = navController,
@@ -103,9 +96,9 @@ class MainActivity : ComponentActivity() {
                             titleText = NavRoute.HomeScreen.pageTitle
                             HomeScreen()
                         }
-                        composable(NavRoute.CardScreen.route) {
-                            titleText = NavRoute.CardScreen.pageTitle
-                            CardScreen {
+                        composable(NavRoute.TextureScreen.route) {
+                            titleText = NavRoute.TextureScreen.pageTitle
+                            TextureScreen {
                                 navController.popBackStack()
                             }
                         }
@@ -123,14 +116,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(NavRoute.SupraFXScreen.route) {
                             titleText = NavRoute.SupraFXScreen.pageTitle
-                            SupraFXScreen(
-                                onToggleLoadingClicked = {
-                                    mainViewModel.supraFX.setIsLoading(!isLoading.value)
-                                },
-                                onFirePulse = { color ->
-                                    mainViewModel.supraFX.firePulse(color)
-                                }
-                            )
+                            SupraFXScreen()
                         }
                         composable(NavRoute.ColorScreen.route) {
                             titleText = NavRoute.ColorScreen.pageTitle
@@ -139,6 +125,14 @@ class MainActivity : ComponentActivity() {
                         composable(NavRoute.DialogScreen.route) {
                             titleText = NavRoute.DialogScreen.pageTitle
                             DialogScreen()
+                        }
+                        composable(NavRoute.TextScreen.route) {
+                            titleText = NavRoute.TextScreen.pageTitle
+                            TextScreen()
+                        }
+                        composable(NavRoute.PickerScreen.route) {
+                            titleText = NavRoute.PickerScreen.pageTitle
+                            PickersScreen()
                         }
                     }
                 }

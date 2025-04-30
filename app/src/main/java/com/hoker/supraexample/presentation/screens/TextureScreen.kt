@@ -21,7 +21,7 @@ import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 
 @Composable
-fun CardScreen(
+fun TextureScreen(
     onBack: () -> Unit
 ) {
     BackHandler {

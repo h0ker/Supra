@@ -9,16 +9,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.hoker.supra.presentation.shapes.CustomCornersShape
+import com.hoker.supra.presentation.sizes.Sizes
+import com.hoker.supra.presentation.text.SupraBodyTextMedium
+import com.hoker.supra.presentation.text.SupraTitleTextSmall
 
 @Composable
 fun SupraMultiSelectionDialog(
@@ -49,14 +49,13 @@ fun SupraMultiSelectionDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Text(
+                    SupraTitleTextSmall(
                         modifier = Modifier
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = Sizes.small)
                             .fillMaxWidth(),
                         text = description,
                         color = MaterialTheme.colorScheme.primary,
-                        fontSize = 24.sp,
-                        textAlign = TextAlign.Center
+                        textAlignment = TextAlign.Center
                     )
                     Card(
                         modifier = Modifier
@@ -64,18 +63,17 @@ fun SupraMultiSelectionDialog(
                                 onFirstOptionClicked()
                             }
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                            .clip(CustomCornersShape(16.dp, 16.dp, 0.dp, 0.dp)),
+                            .padding(horizontal = Sizes.small),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.secondary
-                        )
+                        ),
+                        shape = CustomCornersShape(16.dp, 16.dp, 0.dp, 0.dp)
                     ) {
-                        Text(
+                        SupraBodyTextMedium(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(12.dp),
-                            textAlign = TextAlign.Center,
-                            fontSize = 18.sp,
+                            textAlignment = TextAlign.Center,
                             color = MaterialTheme.colorScheme.primary,
                             text = firstOptionText
                         )
@@ -88,17 +86,17 @@ fun SupraMultiSelectionDialog(
                                     onSecondOptionClicked?.invoke()
                                 }
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = Sizes.small),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.secondary
-                            )
+                            ),
+                            shape = CustomCornersShape(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
-                            Text(
+                            SupraBodyTextMedium(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(12.dp),
-                                textAlign = TextAlign.Center,
-                                fontSize = 18.sp,
+                                textAlignment = TextAlign.Center,
                                 color = MaterialTheme.colorScheme.primary,
                                 text = secondOptionText
                             )
@@ -112,18 +110,17 @@ fun SupraMultiSelectionDialog(
                                     onThirdOptionClicked?.invoke()
                                 }
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .clip(CustomCornersShape(0.dp, 0.dp, 16.dp, 16.dp)),
+                                .padding(horizontal = Sizes.small),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.secondary
-                            )
+                            ),
+                            shape = CustomCornersShape(0.dp, 0.dp, Sizes.medium, Sizes.medium)
                         ) {
-                            Text(
+                            SupraBodyTextMedium(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(12.dp),
-                                textAlign = TextAlign.Center,
-                                fontSize = 18.sp,
+                                textAlignment = TextAlign.Center,
                                 color = MaterialTheme.colorScheme.primary,
                                 text = thirdOptionText
                             )

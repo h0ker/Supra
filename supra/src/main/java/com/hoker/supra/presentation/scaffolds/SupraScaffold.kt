@@ -18,7 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,9 +29,6 @@ fun SupraScaffold(
     drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
     surfaceColor: Color = MaterialTheme.colorScheme.surface,
-    oneshotChannel: ReceiveChannel<Color>? = null,
-    loadingColor: Color = Color.Yellow,
-    isLoading: Boolean = false,
     content: @Composable (modifier: Modifier) -> Unit
 ){
     if (drawerContent != null) {
@@ -58,7 +54,6 @@ fun SupraScaffold(
         ) {
             SupraGyroScaffold(
                 modifier = modifier,
-                isLoading = isLoading,
                 topBar = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -84,11 +79,9 @@ fun SupraScaffold(
                         )
                     }
                 },
-                oneshotChannel = oneshotChannel,
                 bottomBar = bottomBar,
                 backgroundColor = backgroundColor,
                 surfaceColor = surfaceColor,
-                loadingColor = loadingColor,
                 content = content
             )
         }
@@ -98,8 +91,7 @@ fun SupraScaffold(
             topBar = topBar,
             bottomBar = bottomBar,
             backgroundColor = backgroundColor,
-            surfaceColor = backgroundColor,
-            loadingColor = loadingColor,
+            surfaceColor = surfaceColor,
             content = content
         )
     }
