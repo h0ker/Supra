@@ -8,6 +8,7 @@ import android.os.VibrationEffect
 import android.os.VibratorManager
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -144,5 +145,17 @@ class SupraFX @Inject constructor(
 
     fun showSnackbar(message: String) {
         _snackbarChannel.trySend(message)
+    }
+
+    @RequiresPermission(Manifest.permission.VIBRATE)
+    fun error() {
+        playErrorSound()
+        firePulse(Color(context.getColor(R.color.error_red)))
+    }
+
+    @RequiresPermission(Manifest.permission.VIBRATE)
+    fun success() {
+        playSuccessSound()
+        firePulse(Color(context.getColor(R.color.valid_green)))
     }
 }
