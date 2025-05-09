@@ -7,6 +7,7 @@ val ValidGreen = Color(0xFF8BB174) //Green
 
 //Dark Colors
 val SurfaceDark = Color(0xFF0C162D) //Deep Blue
+val SurfaceVariantDark = Color(0xFF2A4150) // Deeper Blue
 val BackgroundDark = Color(0xFF42667E) //VK Blue
 val PrimaryDark = Color(0xFFFFFFFF) //White
 val SecondaryDark = Color(0xFFF67448) //Orange

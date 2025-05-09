@@ -19,6 +19,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     secondary = SecondaryDark,
     surface = SurfaceDark,
+    surfaceVariant = SurfaceVariantDark,
     background = BackgroundDark,
     tertiary = TertiaryDark,
     error = ErrorRed
