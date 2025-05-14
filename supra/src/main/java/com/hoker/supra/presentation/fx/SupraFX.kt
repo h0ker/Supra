@@ -127,6 +127,46 @@ class SupraFX @Inject constructor(
     }
 
     @RequiresPermission(Manifest.permission.VIBRATE)
+    fun success(
+        interrupt: Boolean = false,
+        callback: (() -> Unit)? = null
+    ) {
+        if(!mediaPlayer.isPlaying || interrupt) {
+            playAudioFile(R.raw.success)
+            callback?.invoke()
+            vibrate()
+            firePulse(Color(context.getColor(R.color.valid_green)))
+        } else {
+            mediaPlayer.setOnCompletionListener {
+                playAudioFile(R.raw.success)
+                callback?.invoke()
+                vibrate()
+                firePulse(Color(context.getColor(R.color.valid_green)))
+            }
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.VIBRATE)
+    fun error(
+        interrupt: Boolean = false,
+        callback: (() -> Unit)? = null
+    ) {
+        if(!mediaPlayer.isPlaying || interrupt) {
+            playAudioFile(R.raw.success)
+            callback?.invoke()
+            vibrate()
+            firePulse(Color(context.getColor(R.color.error_red)))
+        } else {
+            mediaPlayer.setOnCompletionListener {
+                playAudioFile(R.raw.success)
+                callback?.invoke()
+                vibrate()
+                firePulse(Color(context.getColor(R.color.error_red)))
+            }
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.VIBRATE)
     private fun vibrate() {
         if (sharedPreferences.getBoolean(Consts.SETTINGS_VIBRATION_ENABLED, true)) {
             try {
@@ -145,17 +185,5 @@ class SupraFX @Inject constructor(
 
     fun showSnackbar(message: String) {
         _snackbarChannel.trySend(message)
-    }
-
-    @RequiresPermission(Manifest.permission.VIBRATE)
-    fun error() {
-        playErrorSound()
-        firePulse(Color(context.getColor(R.color.error_red)))
-    }
-
-    @RequiresPermission(Manifest.permission.VIBRATE)
-    fun success() {
-        playSuccessSound()
-        firePulse(Color(context.getColor(R.color.valid_green)))
     }
 }
