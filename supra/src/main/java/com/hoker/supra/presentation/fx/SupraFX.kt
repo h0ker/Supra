@@ -152,13 +152,13 @@ class SupraFX @Inject constructor(
         callback: (() -> Unit)? = null
     ) {
         if(!mediaPlayer.isPlaying || interrupt) {
-            playAudioFile(R.raw.success)
+            playAudioFile(R.raw.error)
             callback?.invoke()
             vibrate()
             firePulse(Color(context.getColor(R.color.error_red)))
         } else {
             mediaPlayer.setOnCompletionListener {
-                playAudioFile(R.raw.success)
+                playAudioFile(R.raw.error)
                 callback?.invoke()
                 vibrate()
                 firePulse(Color(context.getColor(R.color.error_red)))
