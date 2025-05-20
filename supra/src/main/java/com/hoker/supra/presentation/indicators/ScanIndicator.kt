@@ -1,6 +1,8 @@
 package com.hoker.supra.presentation.indicators
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,9 +42,10 @@ fun ScanIndicator(
 
     AnimatedVisibility(
         visible = loadingState == LoadingState.SCAN_PROMPT,
+        enter = fadeIn(),
+        exit = fadeOut(),
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f))
             .pointerInput(Unit) {
                 awaitPointerEventScope {
                     while (true) {
@@ -52,7 +55,9 @@ fun ScanIndicator(
             },
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .background(Color.Black.copy(alpha = 0.5f))
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -80,9 +85,10 @@ fun ScanIndicator(
     }
     AnimatedVisibility(
         visible = loadingState == LoadingState.SCANNING,
+        enter = fadeIn(),
+        exit = fadeOut(),
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.5f))
             .pointerInput(Unit) {
                 awaitPointerEventScope {
                     while (true) {
@@ -92,7 +98,9 @@ fun ScanIndicator(
             },
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .background(Color.Black.copy(alpha = 0.5f))
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

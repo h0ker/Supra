@@ -8,7 +8,6 @@ import android.os.VibrationEffect
 import android.os.VibratorManager
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -21,6 +20,7 @@ import com.hoker.supra.R
 import com.hoker.supra.di.SupraModule.SupraSharedPrefs
 import com.hoker.supra.domain.Consts
 import com.hoker.supra.domain.LoadingState
+import androidx.core.content.edit
 
 @Singleton
 class SupraFX @Inject constructor(
@@ -50,15 +50,14 @@ class SupraFX @Inject constructor(
     }
 
     fun setAudioSettingState(enabled: Boolean) {
-        with (sharedPreferences.edit()) {
+        sharedPreferences.edit {
             putBoolean(Consts.SETTINGS_AUDIO_ENABLED, enabled)
-            apply()
         }
         _isAudioEnabled.value = enabled
     }
 
     fun setVibrationSettingState(enabled: Boolean) {
-        with(sharedPreferences.edit()) {
+        sharedPreferences.edit {
             putBoolean(Consts.SETTINGS_VIBRATION_ENABLED, enabled)
             apply()
         }
