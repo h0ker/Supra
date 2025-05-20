@@ -60,7 +60,6 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material3)
     implementation(libs.material2)
 }
 
@@ -71,7 +70,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.hoker"
                 artifactId = "Supra"
-                version = "0.1.9"
+                version = "0.1.10"
             }
         }
     }
