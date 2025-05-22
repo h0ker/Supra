@@ -3,6 +3,7 @@ package com.hoker.supra.presentation.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -17,9 +18,9 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
     secondary = SecondaryDark,
     surface = SurfaceDark,
-    surfaceVariant = SurfaceVariantDark,
     background = BackgroundDark,
     tertiary = TertiaryDark,
     error = ErrorRed
@@ -33,6 +34,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = TertiaryLight,
     error = ErrorRed
 )
+
+val ColorScheme.success: Color
+    @Composable get() = ValidGreen
 
 @Composable
 fun SupraTheme(
