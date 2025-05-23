@@ -13,7 +13,7 @@ fun SupraBodyTextSmall(
     modifier: Modifier = Modifier,
     text: String,
     textAlignment: TextAlign = TextAlign.Start,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip
 ) {

@@ -50,7 +50,7 @@ fun SupraDropdownPicker(
                 onTouchAction.invoke()
             },
             interactionSource = NoRippleInteractionSource(),
-            border = BorderStroke(if(expanded) 2.dp else 1.dp, if(expanded) Color.Yellow else MaterialTheme.colorScheme.primary),
+            border = BorderStroke(if(expanded) 2.dp else 1.dp, if(expanded) Color.Yellow else MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(4.dp),
         ) {
             Row(
@@ -63,7 +63,7 @@ fun SupraDropdownPicker(
                 Icon(
                     imageVector = Icons.Filled.ExpandMore,
                     contentDescription = "dropdown icon",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

@@ -101,8 +101,7 @@ fun SupraFXScreen(
         ) {
             SupraTitleTextSmall(
                 modifier = Modifier.padding(start = 16.dp),
-                text = "Sound Effects",
-                color = MaterialTheme.colorScheme.primary,
+                text = "Sound Effects"
             )
             SupraMultiSelector(
                 modifier = Modifier
@@ -128,8 +127,7 @@ fun SupraFXScreen(
         ) {
             SupraTitleTextSmall(
                 modifier = Modifier.padding(start = 16.dp),
-                text = "Vibration Effects",
-                color = MaterialTheme.colorScheme.primary,
+                text = "Vibration Effects"
             )
             SupraMultiSelector(
                 modifier = Modifier

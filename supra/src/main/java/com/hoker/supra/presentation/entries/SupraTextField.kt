@@ -17,7 +17,7 @@ fun SupraTextField(
     label: String? = null,
     singleLine: Boolean = false,
     focusedBorderColor: Color = MaterialTheme.colorScheme.secondary,
-    unfocusedBorderColor: Color = MaterialTheme.colorScheme.primary,
+    unfocusedBorderColor: Color = MaterialTheme.colorScheme.onPrimary,
     visualTransformation: VisualTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     trailingIcon: (@Composable () -> Unit)? = null,

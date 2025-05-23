@@ -22,7 +22,7 @@ fun RandomLoadingGlyph(
     activeColor: Color = MaterialTheme.colorScheme.tertiary
 ) {
 
-    val color = if (isLoading) activeColor else MaterialTheme.colorScheme.primary
+    val color = if (isLoading) activeColor else MaterialTheme.colorScheme.onPrimary
     val glyph = LoadingGlyphs.glyphList.random()
 
     // animatable angle

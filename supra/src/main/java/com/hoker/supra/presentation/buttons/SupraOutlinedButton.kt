@@ -16,7 +16,7 @@ fun SupraOutlinedButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     OutlinedButton(
         modifier = modifier,

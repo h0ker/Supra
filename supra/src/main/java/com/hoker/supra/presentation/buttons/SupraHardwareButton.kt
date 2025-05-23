@@ -33,7 +33,7 @@ fun SupraHardwareButton(
     outerCornerRadius: Dp = 10.dp,
     innerCornerRadius: Dp = 10.dp,
     backgroundColor: Color,
-    textColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit
 ) {
     Box(

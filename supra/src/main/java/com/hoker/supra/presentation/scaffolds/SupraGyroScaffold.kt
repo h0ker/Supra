@@ -45,8 +45,8 @@ fun SupraGyroScaffold(
     modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
-    backgroundColor: Color,
-    surfaceColor: Color,
+    borderColor: Color,
+    contentBackgroundColor: Color,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
@@ -102,7 +102,7 @@ fun SupraGyroScaffold(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(borderColor)
             .drawBehind {
                 currentEffect?.let { effect ->
                     val maxRadius = size.height.toDouble().toFloat() * 3f
@@ -111,11 +111,11 @@ fun SupraGyroScaffold(
                     if (currentRadius > 0) {
                         val brush = Brush.radialGradient(
                             colorStops = arrayOf(
-                                0f to backgroundColor,
-                                0.2f to backgroundColor,
+                                0f to borderColor,
+                                0.2f to borderColor,
                                 0.5f to effect.copy(alpha = alpha.value),
-                                0.8f to backgroundColor,
-                                1f to backgroundColor
+                                0.8f to borderColor,
+                                1f to borderColor
                             ),
                             center = center,
                             radius = currentRadius
@@ -152,7 +152,7 @@ fun SupraGyroScaffold(
             ) {
                 Surface(
                     modifier = Modifier.matchParentSize(),
-                    color = surfaceColor
+                    color = contentBackgroundColor
                 ) {
                     content(
                         Modifier

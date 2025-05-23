@@ -12,7 +12,7 @@ fun SupraTitleTextLarge(
     modifier: Modifier = Modifier,
     text: String,
     textAlignment: TextAlign = TextAlign.Start,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     Text(
         modifier = modifier,

@@ -67,11 +67,11 @@ fun ScanIndicator(
                     .size(Sizes.xLarge),
                 painter = painterResource(R.drawable.contactless),
                 contentDescription = "contactless icon",
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
             )
             SupraTitleTextMedium(
                 text = stringResource(R.string.scan_device_desc),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimary
             )
             SupraOutlinedButton(
                 onClick = {
@@ -79,7 +79,7 @@ fun ScanIndicator(
                 },
                 text = stringResource(R.string.cancel),
                 modifier = Modifier.padding(top = Sizes.medium),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

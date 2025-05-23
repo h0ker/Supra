@@ -41,7 +41,7 @@ fun SupraMultiSelectionDialog(
             Card(
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Column(
@@ -54,7 +54,7 @@ fun SupraMultiSelectionDialog(
                             .padding(bottom = Sizes.small)
                             .fillMaxWidth(),
                         text = description,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         textAlignment = TextAlign.Center
                     )
                     Card(
@@ -74,7 +74,7 @@ fun SupraMultiSelectionDialog(
                                 .fillMaxWidth()
                                 .padding(12.dp),
                             textAlignment = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             text = firstOptionText
                         )
                     }
@@ -97,7 +97,7 @@ fun SupraMultiSelectionDialog(
                                     .fillMaxWidth()
                                     .padding(12.dp),
                                 textAlignment = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 text = secondOptionText
                             )
                         }
@@ -121,7 +121,7 @@ fun SupraMultiSelectionDialog(
                                     .fillMaxWidth()
                                     .padding(12.dp),
                                 textAlignment = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 text = thirdOptionText
                             )
                         }

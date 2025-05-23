@@ -38,8 +38,8 @@ fun ButtonScreen(
             modifier = Modifier
                 .size(100.dp),
             text = "Text",
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            textColor = MaterialTheme.colorScheme.primary.contrastingTextColor()
+            backgroundColor = MaterialTheme.colorScheme.onPrimary,
+            textColor = MaterialTheme.colorScheme.onPrimary.contrastingTextColor()
         ) {}
         SupraHardwareButton(
             modifier = Modifier.size(64.dp),

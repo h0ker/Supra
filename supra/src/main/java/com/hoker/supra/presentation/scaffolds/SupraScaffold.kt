@@ -27,8 +27,8 @@ fun SupraScaffold(
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
     drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
-    surfaceColor: Color = MaterialTheme.colorScheme.surface,
+    borderColor: Color = MaterialTheme.colorScheme.primary,
+    contentBackgroundColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable (modifier: Modifier) -> Unit
 ){
     if (drawerContent != null) {
@@ -46,7 +46,7 @@ fun SupraScaffold(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = backgroundColor
+                    drawerContainerColor = borderColor
                 ) {
                     drawerContent(closeDrawer)
                 }
@@ -80,8 +80,8 @@ fun SupraScaffold(
                     }
                 },
                 bottomBar = bottomBar,
-                backgroundColor = backgroundColor,
-                surfaceColor = surfaceColor,
+                borderColor = borderColor,
+                contentBackgroundColor = contentBackgroundColor,
                 content = content
             )
         }
@@ -90,8 +90,8 @@ fun SupraScaffold(
             modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
-            backgroundColor = backgroundColor,
-            surfaceColor = surfaceColor,
+            borderColor = borderColor,
+            contentBackgroundColor = contentBackgroundColor,
             content = content
         )
     }
