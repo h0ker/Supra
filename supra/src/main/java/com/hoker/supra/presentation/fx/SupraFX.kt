@@ -1,13 +1,12 @@
 package com.hoker.supra.presentation.fx
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.VibrationEffect
 import android.os.VibratorManager
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -21,12 +20,22 @@ import com.hoker.supra.di.SupraModule.SupraSharedPrefs
 import com.hoker.supra.domain.Consts
 import com.hoker.supra.domain.LoadingState
 import androidx.core.content.edit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
+@SuppressLint("MissingPermission")
 @Singleton
 class SupraFX @Inject constructor(
     @ApplicationContext private val context: Context,
     @SupraSharedPrefs private val sharedPreferences: SharedPreferences
 ) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
     private var mediaPlayer = MediaPlayer.create(context, R.raw.connect)
     private val vibratorManager: VibratorManager? = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
 
@@ -38,6 +47,14 @@ class SupraFX @Inject constructor(
 
     private val _loadingState = MutableStateFlow(LoadingState.INACTIVE)
     val loadingState = _loadingState.asStateFlow()
+
+    val isLoading: StateFlow<Boolean> = loadingState
+        .map { it != LoadingState.INACTIVE }
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.Eagerly,
+            initialValue = false
+        )
 
     private val _isAudioEnabled = MutableStateFlow(sharedPreferences.getBoolean(Consts.SETTINGS_AUDIO_ENABLED, true))
     val isAudioEnabled = _isAudioEnabled.asStateFlow()
@@ -93,13 +110,11 @@ class SupraFX @Inject constructor(
         playAudioFile(R.raw.write)
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     fun playErrorSound() {
         playAudioFile(R.raw.error)
         vibrate()
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     fun playConnectSound() {
         if(!mediaPlayer.isPlaying) {
             playAudioFile(R.raw.connect)
@@ -107,7 +122,6 @@ class SupraFX @Inject constructor(
         }
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     fun playSuccessSound(
         interrupt: Boolean = false,
         callback: (() -> Unit)? = null
@@ -125,7 +139,6 @@ class SupraFX @Inject constructor(
         }
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     fun success(
         interrupt: Boolean = false,
         callback: (() -> Unit)? = null
@@ -145,7 +158,6 @@ class SupraFX @Inject constructor(
         }
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     fun error(
         interrupt: Boolean = false,
         callback: (() -> Unit)? = null
@@ -165,7 +177,6 @@ class SupraFX @Inject constructor(
         }
     }
 
-    @RequiresPermission(Manifest.permission.VIBRATE)
     private fun vibrate() {
         if (sharedPreferences.getBoolean(Consts.SETTINGS_VIBRATION_ENABLED, true)) {
             try {
