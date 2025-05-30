@@ -193,9 +193,9 @@ fun SupraGyroScaffold(
                 onDismiss = {
                     snackbarMessage = null
                 },
-                backgroundColor = MaterialTheme.colorScheme.background,
+                backgroundColor = MaterialTheme.colorScheme.surface,
                 borderColor = MaterialTheme.colorScheme.tertiary,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
