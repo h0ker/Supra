@@ -32,7 +32,7 @@ import kotlin.apply
 fun SupraSnackbar(
     modifier: Modifier = Modifier,
     message: String,
-    durationMillis: Long = 5000L,
+    durationMillis: Long = 3000L,
     onDismiss: () -> Unit,
     borderColor: Color,
     backgroundColor: Color,
