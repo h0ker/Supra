@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
@@ -151,7 +152,9 @@ fun SupraGyroScaffold(
                     .clip(RoundedCornerShape(16.dp)),
             ) {
                 Surface(
-                    modifier = Modifier.matchParentSize(),
+                    modifier = Modifier
+                        .blur(if (loadingState.value != LoadingState.INACTIVE) 10.dp else 0.dp)
+                        .matchParentSize(),
                     color = contentBackgroundColor
                 ) {
                     content(
