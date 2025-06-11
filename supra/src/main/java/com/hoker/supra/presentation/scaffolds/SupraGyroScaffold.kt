@@ -52,6 +52,7 @@ fun SupraGyroScaffold(
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
     val loadingState = viewModel.supraFX.loadingState.collectAsState()
+    val loadingStateCustomContent = viewModel.supraFX.loadingStateCustomContent.collectAsState()
 
     //Gyro effect
     val translationData by viewModel.translationData.collectAsState()
@@ -171,6 +172,7 @@ fun SupraGyroScaffold(
                 )
                 ScanIndicator(
                     loadingState = loadingState.value,
+                    customContent = loadingStateCustomContent.value,
                     onCancelClicked = {
                         viewModel.supraFX.setLoadingState(LoadingState.INACTIVE)
                     }

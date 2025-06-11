@@ -1,5 +1,6 @@
 package com.hoker.supraexample.presentation.viewmodels
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hoker.supra.domain.LoadingState
@@ -32,5 +33,13 @@ class SupraFXViewModel @Inject constructor(
                 supraFX.setLoadingState(LoadingState.INACTIVE)
             }
         }
+    }
+
+    fun showScanPromptCustomContent(
+        content: @Composable () -> Unit
+    ) {
+        supraFX.showScanPromptWithCustomContent(
+            content = content
+        )
     }
 }

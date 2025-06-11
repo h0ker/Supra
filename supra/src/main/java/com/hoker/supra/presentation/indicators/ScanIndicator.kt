@@ -37,11 +37,12 @@ import kotlinx.coroutines.delay
 fun ScanIndicator(
     loadingState: LoadingState,
     scanningColor: Color = MaterialTheme.colorScheme.tertiary,
+    customContent: (@Composable () -> Unit)?,
     onCancelClicked: () -> Unit
 ) {
 
     AnimatedVisibility(
-        visible = loadingState == LoadingState.SCAN_PROMPT,
+        visible = loadingState == LoadingState.SCAN_PROMPT || loadingState == LoadingState.SCAN_PROMPT_CUSTOM_CONTENT,
         enter = fadeIn(),
         exit = fadeOut(),
         modifier = Modifier
@@ -58,29 +59,39 @@ fun ScanIndicator(
             modifier = Modifier
                 .background(Color.Black.copy(alpha = 0.5f))
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier
-                    .padding(bottom = Sizes.medium)
-                    .size(Sizes.xLarge),
-                painter = painterResource(R.drawable.contactless),
-                contentDescription = "contactless icon",
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-            )
-            SupraTitleTextMedium(
-                text = stringResource(R.string.scan_device_desc),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-            SupraOutlinedButton(
-                onClick = {
-                    onCancelClicked()
-                },
-                text = stringResource(R.string.cancel),
-                modifier = Modifier.padding(top = Sizes.medium),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+            if (loadingState == LoadingState.SCAN_PROMPT_CUSTOM_CONTENT) {
+                customContent?.let { content ->
+                    content()
+                }
+            }
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier
+                        .padding(bottom = Sizes.medium)
+                        .size(Sizes.xLarge),
+                    painter = painterResource(R.drawable.contactless),
+                    contentDescription = "contactless icon",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                )
+                SupraTitleTextMedium(
+                    text = stringResource(R.string.scan_device_desc),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                SupraOutlinedButton(
+                    onClick = {
+                        onCancelClicked()
+                    },
+                    text = stringResource(R.string.cancel),
+                    modifier = Modifier.padding(top = Sizes.medium),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
     AnimatedVisibility(

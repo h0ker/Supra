@@ -7,6 +7,7 @@ import android.media.MediaPlayer
 import android.os.VibrationEffect
 import android.os.VibratorManager
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -48,6 +49,9 @@ class SupraFX @Inject constructor(
     private val _loadingState = MutableStateFlow(LoadingState.INACTIVE)
     val loadingState = _loadingState.asStateFlow()
 
+    private val _loadingStateCustomContent = MutableStateFlow<(@Composable () -> Unit)?>(null)
+    val loadingStateCustomContent = _loadingStateCustomContent.asStateFlow()
+
     val isLoading: StateFlow<Boolean> = loadingState
         .map { it != LoadingState.INACTIVE }
         .stateIn(
@@ -63,7 +67,15 @@ class SupraFX @Inject constructor(
     val isVibrationEnabled = _isVibrationEnabled.asStateFlow()
 
     fun setLoadingState(state: LoadingState) {
+        if (state == LoadingState.INACTIVE) {
+            _loadingStateCustomContent.value = null
+        }
         _loadingState.value = state
+    }
+
+    fun showScanPromptWithCustomContent(content: @Composable () -> Unit) {
+        _loadingStateCustomContent.value = content
+        _loadingState.value = LoadingState.SCAN_PROMPT_CUSTOM_CONTENT
     }
 
     fun setAudioSettingState(enabled: Boolean) {

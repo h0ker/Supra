@@ -8,18 +8,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hoker.supra.presentation.controls.SettingsBooleanState
 import com.hoker.supra.presentation.controls.SupraMultiSelector
 import com.hoker.supra.presentation.sizes.Sizes
+import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraTitleTextSmall
 import com.hoker.supraexample.presentation.viewmodels.SupraFXViewModel
 
@@ -57,6 +63,38 @@ fun SupraFXScreen(
         ) {
             Text(
                 text = "Show Scan Prompt Indicator (10 seconds)"
+            )
+        }
+
+        Button(
+            onClick = {
+                viewModel.showScanPromptCustomContent {
+                    Card(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .wrapContentHeight()
+                            .fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            SupraBodyTextMedium(
+                                text = "HMAC",
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                            SupraBodyTextMedium(
+                                text = "Writing key onto slot 1"
+                            )
+                        }
+                    }
+                }
+            }
+        ) {
+            Text(
+                text = "Show cancellable dialog with custom content"
             )
         }
 
