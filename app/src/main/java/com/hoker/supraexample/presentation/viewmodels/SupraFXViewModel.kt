@@ -3,7 +3,7 @@ package com.hoker.supraexample.presentation.viewmodels
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hoker.supra.domain.LoadingState
+import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.fx.SupraFX
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,20 +17,20 @@ class SupraFXViewModel @Inject constructor(
 
     fun startIndeterminateLoading5Sec() {
         viewModelScope.launch {
-            supraFX.setLoadingState(LoadingState.LOADING_INDETERMINATE)
+            supraFX.setLoadingState(OverlayState.LOADING_INDETERMINATE)
             delay(5000)
-            supraFX.setLoadingState(LoadingState.INACTIVE)
+            supraFX.setLoadingState(OverlayState.INACTIVE)
         }
     }
 
     fun showScanPrompt() {
         viewModelScope.launch {
-            supraFX.setLoadingState(LoadingState.SCAN_PROMPT)
+            supraFX.setLoadingState(OverlayState.SCAN_PROMPT)
             delay(5000)
-            if (supraFX.loadingState.value != LoadingState.INACTIVE) {
-                supraFX.setLoadingState(LoadingState.SCANNING)
+            if (supraFX.overlayState.value != OverlayState.INACTIVE) {
+                supraFX.setLoadingState(OverlayState.SCANNING)
                 delay(5000)
-                supraFX.setLoadingState(LoadingState.INACTIVE)
+                supraFX.setLoadingState(OverlayState.INACTIVE)
             }
         }
     }

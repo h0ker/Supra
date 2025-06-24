@@ -19,7 +19,7 @@ import javax.inject.Singleton
 import com.hoker.supra.R
 import com.hoker.supra.di.SupraModule.SupraSharedPrefs
 import com.hoker.supra.domain.Consts
-import com.hoker.supra.domain.LoadingState
+import com.hoker.supra.domain.OverlayState
 import androidx.core.content.edit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,14 +46,14 @@ class SupraFX @Inject constructor(
     private val _snackbarChannel = Channel<String>(Channel.BUFFERED)
     val snackbarChannel: ReceiveChannel<String> = _snackbarChannel
 
-    private val _loadingState = MutableStateFlow(LoadingState.INACTIVE)
-    val loadingState = _loadingState.asStateFlow()
+    private val _overlayState = MutableStateFlow(OverlayState.INACTIVE)
+    val overlayState = _overlayState.asStateFlow()
 
-    private val _loadingStateCustomContent = MutableStateFlow<(@Composable () -> Unit)?>(null)
-    val loadingStateCustomContent = _loadingStateCustomContent.asStateFlow()
+    private val _overlayCustomContent = MutableStateFlow<(@Composable () -> Unit)?>(null)
+    val overlayCustomContent = _overlayCustomContent.asStateFlow()
 
-    val isLoading: StateFlow<Boolean> = loadingState
-        .map { it != LoadingState.INACTIVE }
+    val isLoading: StateFlow<Boolean> = overlayState
+        .map { it != OverlayState.INACTIVE }
         .stateIn(
             scope = scope,
             started = SharingStarted.Eagerly,
@@ -66,16 +66,21 @@ class SupraFX @Inject constructor(
     private val _isVibrationEnabled = MutableStateFlow(sharedPreferences.getBoolean(Consts.SETTINGS_VIBRATION_ENABLED, true))
     val isVibrationEnabled = _isVibrationEnabled.asStateFlow()
 
-    fun setLoadingState(state: LoadingState) {
-        if (state == LoadingState.INACTIVE) {
-            _loadingStateCustomContent.value = null
+    fun setLoadingState(state: OverlayState) {
+        if (state == OverlayState.INACTIVE) {
+            _overlayCustomContent.value = null
         }
-        _loadingState.value = state
+        _overlayState.value = state
     }
 
     fun showScanPromptWithCustomContent(content: @Composable () -> Unit) {
-        _loadingStateCustomContent.value = content
-        _loadingState.value = LoadingState.SCAN_PROMPT_CUSTOM_CONTENT
+        _overlayCustomContent.value = content
+        _overlayState.value = OverlayState.SCAN_PROMPT_CUSTOM_CONTENT
+    }
+
+    fun showOverlayWithCustomContent(content: @Composable () -> Unit) {
+        _overlayCustomContent.value = content
+        _overlayState.value = OverlayState.CUSTOM_CONTENT
     }
 
     fun setAudioSettingState(enabled: Boolean) {

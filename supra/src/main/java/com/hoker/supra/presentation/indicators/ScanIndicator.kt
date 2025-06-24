@@ -1,6 +1,7 @@
 package com.hoker.supra.presentation.indicators
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
@@ -27,7 +28,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.hoker.supra.R
-import com.hoker.supra.domain.LoadingState
+import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.buttons.SupraOutlinedButton
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
@@ -35,14 +36,14 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ScanIndicator(
-    loadingState: LoadingState,
+    overlayState: OverlayState,
     scanningColor: Color = MaterialTheme.colorScheme.tertiary,
     customContent: (@Composable () -> Unit)?,
     onCancelClicked: () -> Unit
 ) {
 
     AnimatedVisibility(
-        visible = loadingState == LoadingState.SCAN_PROMPT || loadingState == LoadingState.SCAN_PROMPT_CUSTOM_CONTENT,
+        visible = overlayState == OverlayState.SCAN_PROMPT || overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT,
         enter = fadeIn(),
         exit = fadeOut(),
         modifier = Modifier
@@ -58,44 +59,47 @@ fun ScanIndicator(
         Column(
             modifier = Modifier
                 .background(Color.Black.copy(alpha = 0.5f))
+                .animateContentSize()
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (loadingState == LoadingState.SCAN_PROMPT_CUSTOM_CONTENT) {
+            if (overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT || overlayState == OverlayState.CUSTOM_CONTENT) {
                 customContent?.let { content ->
                     content()
                 }
             }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier
-                        .padding(bottom = Sizes.medium)
-                        .size(Sizes.xLarge),
-                    painter = painterResource(R.drawable.contactless),
-                    contentDescription = "contactless icon",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
-                )
-                SupraTitleTextMedium(
-                    text = stringResource(R.string.scan_device_desc),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                SupraOutlinedButton(
-                    onClick = {
-                        onCancelClicked()
-                    },
-                    text = stringResource(R.string.cancel),
-                    modifier = Modifier.padding(top = Sizes.medium),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+            if (overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .padding(bottom = Sizes.medium)
+                            .size(Sizes.xLarge),
+                        painter = painterResource(R.drawable.contactless),
+                        contentDescription = "contactless icon",
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                    )
+                    SupraTitleTextMedium(
+                        text = stringResource(R.string.scan_device_desc),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    SupraOutlinedButton(
+                        onClick = {
+                            onCancelClicked()
+                        },
+                        text = stringResource(R.string.cancel),
+                        modifier = Modifier.padding(top = Sizes.medium),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
         }
     }
     AnimatedVisibility(
-        visible = loadingState == LoadingState.SCANNING,
+        visible = overlayState == OverlayState.SCANNING,
         enter = fadeIn(),
         exit = fadeOut(),
         modifier = Modifier

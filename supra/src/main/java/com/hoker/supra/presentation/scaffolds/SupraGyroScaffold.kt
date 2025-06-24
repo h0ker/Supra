@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hoker.supra.domain.LoadingState
+import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
 import com.hoker.supra.presentation.sizes.Sizes
@@ -51,8 +51,8 @@ fun SupraGyroScaffold(
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
-    val loadingState = viewModel.supraFX.loadingState.collectAsState()
-    val loadingStateCustomContent = viewModel.supraFX.loadingStateCustomContent.collectAsState()
+    val loadingState = viewModel.supraFX.overlayState.collectAsState()
+    val loadingStateCustomContent = viewModel.supraFX.overlayCustomContent.collectAsState()
 
     //Gyro effect
     val translationData by viewModel.translationData.collectAsState()
@@ -154,7 +154,7 @@ fun SupraGyroScaffold(
             ) {
                 Surface(
                     modifier = Modifier
-                        .blur(if (loadingState.value != LoadingState.INACTIVE) 10.dp else 0.dp)
+                        .blur(if (loadingState.value != OverlayState.INACTIVE) 10.dp else 0.dp)
                         .matchParentSize(),
                     color = contentBackgroundColor
                 ) {
@@ -168,13 +168,13 @@ fun SupraGyroScaffold(
                     )
                 }
                 IndeterminateLoadingIndicator(
-                    show = loadingState.value == LoadingState.LOADING_INDETERMINATE,
+                    show = loadingState.value == OverlayState.LOADING_INDETERMINATE,
                 )
                 ScanIndicator(
-                    loadingState = loadingState.value,
+                    overlayState = loadingState.value,
                     customContent = loadingStateCustomContent.value,
                     onCancelClicked = {
-                        viewModel.supraFX.setLoadingState(LoadingState.INACTIVE)
+                        viewModel.supraFX.setLoadingState(OverlayState.INACTIVE)
                     }
                 )
             }
