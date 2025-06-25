@@ -43,7 +43,7 @@ fun ScanIndicator(
 ) {
 
     AnimatedVisibility(
-        visible = overlayState == OverlayState.SCAN_PROMPT || overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT,
+        visible = overlayState == OverlayState.SCAN_PROMPT || overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT || overlayState == OverlayState.CUSTOM_CONTENT,
         enter = fadeIn(),
         exit = fadeOut(),
         modifier = Modifier
