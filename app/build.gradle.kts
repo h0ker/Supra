@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.hoker.supraexample"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hoker.supraexample"
         minSdk = 31
-        targetSdk = 35
-        versionCode = 119
-        versionName = "0.1.19"
+        targetSdk = 36
+        versionCode = 120
+        versionName = "0.1.20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -60,7 +60,8 @@ fun ScanIndicator(
             modifier = Modifier
                 .background(Color.Black.copy(alpha = 0.5f))
                 .animateContentSize()
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = Sizes.medium),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
