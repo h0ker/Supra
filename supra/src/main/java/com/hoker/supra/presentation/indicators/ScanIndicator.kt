@@ -70,7 +70,7 @@ fun ScanIndicator(
                     content()
                 }
             }
-            if (overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT) {
+            if (overlayState == OverlayState.SCAN_PROMPT_CUSTOM_CONTENT || overlayState == OverlayState.SCAN_PROMPT) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
