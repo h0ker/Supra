@@ -174,6 +174,7 @@ fun SupraGyroScaffold(
                     overlayState = loadingState.value,
                     customContent = loadingStateCustomContent.value,
                     onCancelClicked = {
+                        viewModel.supraFX.overlayDismissAction.value?.invoke()
                         viewModel.supraFX.setLoadingState(OverlayState.INACTIVE)
                     }
                 )

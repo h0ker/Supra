@@ -52,6 +52,9 @@ class SupraFX @Inject constructor(
     private val _overlayCustomContent = MutableStateFlow<(@Composable () -> Unit)?>(null)
     val overlayCustomContent = _overlayCustomContent.asStateFlow()
 
+    private val _overlayDismissAction = MutableStateFlow<(() -> Unit)?>(null)
+    val overlayDismissAction = _overlayDismissAction.asStateFlow()
+
     val isLoading: StateFlow<Boolean> = overlayState
         .map { it != OverlayState.INACTIVE }
         .stateIn(
@@ -69,12 +72,17 @@ class SupraFX @Inject constructor(
     fun setLoadingState(state: OverlayState) {
         if (state == OverlayState.INACTIVE) {
             _overlayCustomContent.value = null
+            _overlayDismissAction.value = null
         }
         _overlayState.value = state
     }
 
-    fun showScanPromptWithCustomContent(content: @Composable () -> Unit) {
+    fun showScanPromptWithCustomContent(
+        content: @Composable () -> Unit,
+        onDismiss: (() -> Unit)? = null
+    ) {
         _overlayCustomContent.value = content
+        _overlayDismissAction.value = onDismiss
         _overlayState.value = OverlayState.SCAN_PROMPT_CUSTOM_CONTENT
     }
 
