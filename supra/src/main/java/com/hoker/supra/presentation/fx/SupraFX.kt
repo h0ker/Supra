@@ -78,8 +78,8 @@ class SupraFX @Inject constructor(
     }
 
     fun showScanPromptWithCustomContent(
-        content: @Composable () -> Unit,
-        onDismiss: (() -> Unit)? = null
+        onDismiss: (() -> Unit)? = null,
+        content: @Composable () -> Unit
     ) {
         _overlayCustomContent.value = content
         _overlayDismissAction.value = onDismiss
