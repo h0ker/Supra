@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.hoker.supra"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 31
@@ -70,7 +70,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.hoker"
                 artifactId = "Supra"
-                version = "0.1.26"
+                version = "0.1.27"
             }
         }
     }
