@@ -13,6 +13,11 @@ val OnPrimaryDark = Color(0xFFFFFFFF) //White
 val SecondaryDark = Color(0xFFF67448) //Orange
 val TertiaryDark = Color(0xFFFDFE1B) //Yellow
 
+//AMOLED-theme colors
+val BackgroundAmoled = Color(0xFF000000)
+val SurfaceAmoled = Color(0xFF151419)
+val onPrimaryAmoled = Color(0xFFA5A6B9)
+
 //Light Colors
 val SurfaceLight = Color(0xFFAFB8C2) //Silver
 val BackgroundLight = Color(0xFFFFFFFF) //White
