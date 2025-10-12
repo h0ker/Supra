@@ -27,7 +27,7 @@ fun SupraDropdownPicker(
     items: List<String>,
     selectedValue: String,
     label: String? = null,
-    labelBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    labelBackgroundColor: Color = MaterialTheme.colorScheme.background,
     height: Dp = Sizes.defaultDropdownPickerHeight,
     width: Dp = Sizes.defaultDropdownPickerWidth,
     onTouchAction: () -> Unit = {},
@@ -50,7 +50,7 @@ fun SupraDropdownPicker(
                 onTouchAction.invoke()
             },
             interactionSource = NoRippleInteractionSource(),
-            border = BorderStroke(if(expanded) 2.dp else 1.dp, if(expanded) Color.Yellow else MaterialTheme.colorScheme.onPrimary),
+            border = BorderStroke(if(expanded) 2.dp else 1.dp, if(expanded) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(4.dp),
         ) {
             Row(

@@ -27,6 +27,7 @@ import com.hoker.supra.presentation.controls.SupraMultiSelector
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraTitleTextSmall
+import com.hoker.supra.presentation.theme.success
 import com.hoker.supraexample.presentation.viewmodels.SupraFXViewModel
 
 @Composable
@@ -34,8 +35,8 @@ fun SupraFXScreen(
     viewModel: SupraFXViewModel = hiltViewModel()
 ) {
 
-    val successColor = MaterialTheme.colorScheme.tertiary
-    val errorColor = MaterialTheme.colorScheme.secondary
+    val successColor = MaterialTheme.colorScheme.success
+    val errorColor = MaterialTheme.colorScheme.error
 
     val isAudioEnabled = viewModel.supraFX.isAudioEnabled.collectAsState()
     val isVibrationEnabled = viewModel.supraFX.isVibrationEnabled.collectAsState()

@@ -33,6 +33,8 @@ fun SupraMultiSelector(
     options: List<String>,
     selectedOption: String,
     onOptionSelect: (String) -> Unit,
+    selectedBackgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    unselectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     state: MultiSelectorState = rememberMultiSelectorState(
         options = options,
         selectedOption = selectedOption,
@@ -53,11 +55,11 @@ fun SupraMultiSelector(
     Layout(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(MaterialTheme.colorScheme.surface),
+            .background(unselectedBackgroundColor),
         content = {
             options.forEachIndexed { index, option ->
                 val isSelected = option == selectedOption
-                val backgroundColor = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surface
+                val backgroundColor = if (isSelected) selectedBackgroundColor else unselectedBackgroundColor
                 val targetTextColor = backgroundColor.contrastingTextColor()
                 val animatedTextColor by animateColorAsState(targetValue = targetTextColor)
                 Box(
@@ -87,7 +89,7 @@ fun SupraMultiSelector(
                             bottomEndPercent = state.endCornerPercent
                         )
                     )
-                    .background(MaterialTheme.colorScheme.tertiary)
+                    .background(selectedBackgroundColor)
             )
         }
     ) { measurables, constraints ->

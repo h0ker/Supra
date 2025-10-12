@@ -19,10 +19,10 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     onPrimary = OnPrimaryDark,
-    secondary = SecondaryDark,
-    surface = SurfaceDark,
-    background = BackgroundDark,
+    secondary = VivoKeyBlue,
     tertiary = TertiaryDark,
+    background = BackgroundDark,
+    surface = PrimaryDark,
     error = ErrorRed
 )
 
