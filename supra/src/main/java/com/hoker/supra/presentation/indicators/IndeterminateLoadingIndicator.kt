@@ -17,7 +17,7 @@ import com.hoker.supra.presentation.sizes.Sizes
 @Composable
 fun IndeterminateLoadingIndicator(
     show: Boolean,
-    color: Color = MaterialTheme.colorScheme.tertiary
+    color: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     AnimatedVisibility(
         visible = show,

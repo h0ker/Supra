@@ -37,7 +37,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ScanIndicator(
     overlayState: OverlayState,
-    scanningColor: Color = MaterialTheme.colorScheme.tertiary,
+    scanningColor: Color = MaterialTheme.colorScheme.onPrimary,
     customContent: (@Composable () -> Unit)?,
     onCancelClicked: () -> Unit
 ) {
