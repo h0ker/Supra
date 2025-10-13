@@ -10,7 +10,7 @@ val BackgroundDark = Color.Black
 val PrimaryDark = Color(0xFF28292E) //Dark grey
 val VivoKeyBlue = Color(0xFF42667E) //VK Blue
 val OnPrimaryDark = Color.White
-val TertiaryDark = Color(0xFF2196F3) //Light Blue
+val TertiaryDark = Color(0xFF6593B4) //Light Blue
 
 //AMOLED-theme colors
 val BackgroundAmoled = Color(0xFF000000)
