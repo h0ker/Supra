@@ -40,6 +40,7 @@ import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.snackbars.SupraSnackbar
+import com.hoker.supra.utils.ModifierUtils.Companion.shadow
 
 @Composable
 fun SupraGyroScaffold(
@@ -195,11 +196,12 @@ fun SupraGyroScaffold(
             exit = fadeOut()
         ) {
             SupraSnackbar(
+                modifier = Modifier.shadow(elevation = Sizes.small),
                 message = snackbarMessage ?: "",
                 onDismiss = {
                     snackbarMessage = null
                 },
-                backgroundColor = MaterialTheme.colorScheme.secondary,
+                backgroundColor = MaterialTheme.colorScheme.surface,
                 borderColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
