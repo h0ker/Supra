@@ -196,7 +196,6 @@ fun SupraGyroScaffold(
             exit = fadeOut()
         ) {
             SupraSnackbar(
-                modifier = Modifier.shadow(elevation = Sizes.small),
                 message = snackbarMessage ?: "",
                 onDismiss = {
                     snackbarMessage = null
