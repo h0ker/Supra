@@ -14,8 +14,8 @@ android {
         applicationId = "com.hoker.supraexample"
         minSdk = 31
         targetSdk = 36
-        versionCode = 130
-        versionName = "0.1.30"
+        versionCode = 131
+        versionName = "0.1.31"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
