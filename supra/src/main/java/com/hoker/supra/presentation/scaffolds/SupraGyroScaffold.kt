@@ -155,7 +155,7 @@ fun SupraGyroScaffold(
             ) {
                 Surface(
                     modifier = Modifier
-                        .blur(if (loadingState.value != OverlayState.INACTIVE) 10.dp else 0.dp)
+                        .blur(if (loadingState.value != OverlayState.INACTIVE) 20.dp else 0.dp)
                         .matchParentSize(),
                     color = contentBackgroundColor
                 ) {
