@@ -7,7 +7,8 @@ val ValidGreen = Color(0xFF8BB174) //Green
 
 //Dark Colors
 val BackgroundDark = Color.Black
-val PrimaryDark = Color(0xFF28292E) //Dark grey
+val PrimaryDark = Color(0xFF1C1C20) //Dark grey
+val SurfaceDark = Color(0xFF28292E) //Dark grey
 val VivoKeyBlue = Color(0xFF42667E) //VK Blue
 val OnPrimaryDark = Color.White
 val TertiaryDark = Color(0xFF8BAEC7) //Light Blue
