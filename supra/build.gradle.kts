@@ -61,6 +61,11 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.material2)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.zxing)
+    implementation(libs.accompanist.permissions)
 }
 
 afterEvaluate {
@@ -70,7 +75,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.hoker"
                 artifactId = "Supra"
-                version = "0.1.35"
+                version = "0.1.36"
             }
         }
     }

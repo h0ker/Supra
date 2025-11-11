@@ -35,6 +35,7 @@ import com.hoker.supraexample.presentation.screens.DialogScreen
 import com.hoker.supraexample.presentation.screens.EntriesScreen
 import com.hoker.supraexample.presentation.screens.HomeScreen
 import com.hoker.supraexample.presentation.screens.PickersScreen
+import com.hoker.supraexample.presentation.screens.QrScannerScreen
 import com.hoker.supraexample.presentation.screens.SupraFXScreen
 import com.hoker.supraexample.presentation.screens.TextScreen
 import com.hoker.supraexample.presentation.viewmodels.MainViewModel
@@ -133,6 +134,10 @@ class MainActivity : ComponentActivity() {
                         composable(NavRoute.PickerScreen.route) {
                             titleText = NavRoute.PickerScreen.pageTitle
                             PickersScreen()
+                        }
+                        composable(NavRoute.QrScannerScreen.route) {
+                            titleText = NavRoute.QrScannerScreen.pageTitle
+                            QrScannerScreen()
                         }
                     }
                 }

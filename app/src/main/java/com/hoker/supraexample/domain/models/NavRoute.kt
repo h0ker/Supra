@@ -10,6 +10,7 @@ sealed class NavRoute(val route: String, val pageTitle: String) {
     data object DialogScreen: NavRoute("dialog_screen", "Dialogs")
     data object TextScreen: NavRoute("text_screen", "Text")
     data object PickerScreen: NavRoute("picker_screen", "Pickers")
+    data object QrScannerScreen: NavRoute("qr_scanner_screen", "QR Scanner")
 
     companion object {
         val menuOptions = listOf(
@@ -20,7 +21,8 @@ sealed class NavRoute(val route: String, val pageTitle: String) {
             ColorScreen,
             DialogScreen,
             TextScreen,
-            PickerScreen
+            PickerScreen,
+            QrScannerScreen
         )
     }
 }

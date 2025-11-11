@@ -11,6 +11,8 @@ object Sizes {
     val xxLarge = 64.dp
     val xxxLarge = 128.dp
 
+    val qrScannerSize = 180.dp
+
     val defaultDrawerWidth = 240.dp
 
     //Pickers
