@@ -54,7 +54,15 @@ fun Modifier.glitchEffect(
     val graphicsLayer = rememberGraphicsLayer()
     var step by remember { mutableStateOf(0) }
 
+    var isFirstLaunch by remember { mutableStateOf(true) }
+
     LaunchedEffect(key) {
+
+        if (isFirstLaunch) {
+            isFirstLaunch = false
+            return@LaunchedEffect
+        }
+
         Animatable(10f)
             .animateTo(
                 targetValue = 0f,
