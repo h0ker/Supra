@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 comGoogleDevtoolsKspGradlePlugin = "2.2.20-2.0.2"
 hiltAndroidGradlePlugin = "2.57.2"
 kotlin = "2.2.20"

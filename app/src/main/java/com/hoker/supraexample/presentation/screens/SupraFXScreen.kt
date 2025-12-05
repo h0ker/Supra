@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hoker.supra.presentation.controls.SettingsBooleanState
 import com.hoker.supra.presentation.controls.SupraMultiSelector
+import com.hoker.supra.presentation.fx.GlitchEffectImpl
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraTitleTextSmall
@@ -182,5 +183,7 @@ fun SupraFXScreen(
                 }
             )
         }
+
+        GlitchEffectImpl()
     }
 }
