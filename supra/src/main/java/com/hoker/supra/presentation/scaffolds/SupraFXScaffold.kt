@@ -40,10 +40,10 @@ import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.snackbars.SupraSnackbar
-import com.hoker.supra.utils.ModifierUtils.Companion.shadow
+import com.hoker.supra.utils.ModifierUtils.Companion.magneticGlow
 
 @Composable
-fun SupraGyroScaffold(
+fun SupraFXScaffold(
     modifier: Modifier = Modifier,
     topBar: (@Composable () -> Unit)? = null,
     bottomBar: (@Composable () -> Unit)? = null,
@@ -52,8 +52,9 @@ fun SupraGyroScaffold(
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
+    val magViewModel: MagneticFieldViewModel = hiltViewModel()
     val loadingState = viewModel.supraFX.overlayState.collectAsState()
-    val loadingStateCustomContent = viewModel.supraFX.overlayCustomContent.collectAsState()
+    val loadingStateCustomContent = magViewModel.supraFX.overlayCustomContent.collectAsState()
 
     //Gyro effect
     val translationData by viewModel.translationData.collectAsState()
@@ -66,6 +67,9 @@ fun SupraGyroScaffold(
     var currentEffect by remember { mutableStateOf<Color?>(null) }
     val effectProgress = remember { Animatable(0f) }
     val alpha = remember { Animatable(0f) }
+
+    //Degauss effect
+    val magneticInterference by viewModel.supraFX.magneticInterference.collectAsState()
 
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
@@ -135,7 +139,9 @@ fun SupraGyroScaffold(
         contentAlignment = Alignment.Center
     ) {
         Scaffold(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize()
+                .magneticGlow(magneticInterference),
             topBar = {
                 topBar?.invoke()
             },

@@ -69,6 +69,18 @@ class SupraFX @Inject constructor(
     private val _isVibrationEnabled = MutableStateFlow(sharedPreferences.getBoolean(Consts.SETTINGS_VIBRATION_ENABLED, true))
     val isVibrationEnabled = _isVibrationEnabled.asStateFlow()
 
+    private val _magneticInterference = MutableStateFlow(0f)
+    val magneticInterference = _magneticInterference.asStateFlow()
+
+    fun updateMagneticInterference(uTesla: Float) {
+        val threshold = 60f
+        val maxEffect = 800f
+
+        val intensity = ((uTesla - threshold) / (maxEffect - threshold)).coerceIn(0f, 1f)
+
+        _magneticInterference.value = intensity
+    }
+
     fun setLoadingState(state: OverlayState) {
         if (state == OverlayState.INACTIVE) {
             _overlayCustomContent.value = null

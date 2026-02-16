@@ -52,7 +52,7 @@ fun SupraScaffold(
                 }
             }
         ) {
-            SupraGyroScaffold(
+            SupraFXScaffold(
                 modifier = modifier,
                 topBar = {
                     Row(
@@ -86,7 +86,7 @@ fun SupraScaffold(
             )
         }
     } else {
-        SupraGyroScaffold(
+        SupraFXScaffold(
             modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
