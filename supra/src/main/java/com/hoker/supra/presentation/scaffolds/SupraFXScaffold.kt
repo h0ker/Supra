@@ -52,9 +52,9 @@ fun SupraFXScaffold(
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = hiltViewModel()
-    val magViewModel: MagneticFieldViewModel = hiltViewModel()
+    //val magViewModel: MagneticFieldViewModel = hiltViewModel()
     val loadingState = viewModel.supraFX.overlayState.collectAsState()
-    val loadingStateCustomContent = magViewModel.supraFX.overlayCustomContent.collectAsState()
+    val loadingStateCustomContent = viewModel.supraFX.overlayCustomContent.collectAsState()
 
     //Gyro effect
     val translationData by viewModel.translationData.collectAsState()
@@ -69,7 +69,7 @@ fun SupraFXScaffold(
     val alpha = remember { Animatable(0f) }
 
     //Degauss effect
-    val magneticInterference by viewModel.supraFX.magneticInterference.collectAsState()
+    //val magneticInterference by viewModel.supraFX.magneticInterference.collectAsState()
 
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
@@ -140,8 +140,8 @@ fun SupraFXScaffold(
     ) {
         Scaffold(
             modifier = modifier
-                .fillMaxSize()
-                .magneticGlow(magneticInterference),
+                .fillMaxSize(),
+                //.magneticGlow(magneticInterference),
             topBar = {
                 topBar?.invoke()
             },
@@ -156,8 +156,8 @@ fun SupraFXScaffold(
                     .offset(x = animatedXOffset.value, y = animatedYOffset.value)
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .padding(paddingValues)
-                    .shadow(elevation = 3.dp, shape = RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(16.dp)),
+                    .shadow(elevation = 3.dp, shape = RoundedCornerShape(32.dp))
+                    .clip(RoundedCornerShape(32.dp)),
             ) {
                 Surface(
                     modifier = Modifier
