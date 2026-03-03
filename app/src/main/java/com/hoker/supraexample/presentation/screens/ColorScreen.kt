@@ -5,11 +5,15 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,13 +30,22 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
+import com.hoker.supra.presentation.pickers.SupraDropdownPicker
 import com.hoker.supra.presentation.sizes.Sizes
+import com.hoker.supra.presentation.text.SupraBodyTextMedium
+import com.hoker.supraexample.presentation.models.UiTheme
 import kotlin.math.atan2
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun ColorScreen() {
+fun ColorScreen(
+    themeInitialState: String,
+    onThemeStateChanged: (String) -> Unit
+) {
+
+    var themeSelection by remember { mutableStateOf(themeInitialState) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,93 +53,33 @@ fun ColorScreen() {
         verticalArrangement = Arrangement.spacedBy(Sizes.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ColorPickerWheel(
-            onColorChanged = { color ->
-
-            }
-        )
-    }
-}
-
-@OptIn(ExperimentalUuidApi::class)
-@Composable
-fun ColorPickerWheel(
-    modifier: Modifier = Modifier,
-    onColorChanged: (Color) -> Unit,
-    initialColor: Color = Color.Red
-) {
-    // State for the current selected color.
-    var selectedColor by remember { mutableStateOf(initialColor) }
-    // Hex input field text.
-    var hexInput by remember { mutableStateOf(selectedColor.toHex()) }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        // The color wheel itself.
-        Box(modifier = Modifier.size(300.dp)) {
-            Canvas(
+        Row(
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            SupraBodyTextMedium(
+                modifier = Modifier.padding(start = 16.dp),
+                text = "Theme"
+            )
+            SupraDropdownPicker(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTapGestures { offset ->
-                            // Calculate relative to center.
-                            val center = size.center
-                            val dx = offset.x - center.x
-                            val dy = offset.y - center.y
-                            val angle = Math.toDegrees(atan2(dy, dx).toDouble()).toFloat()
-                            // Convert negative angles to a 0-360 range.
-                            val hue = if (angle < 0) angle + 360f else angle
-                            // Use full saturation and brightness; adjust if needed.
-                            val color = Color.hsv(hue, 1f, 1f)
-                            selectedColor = color
-                            hexInput = color.toHex()
-                            onColorChanged(color)
-                        }
-                    }
-            ) {
-                // We'll draw the hue wheel as a series of short arcs.
-                val radius = size.minDimension / 2f
-                val strokeWidth = radius * 0.3f // Change this to adjust the wheel's thickness.
-                for (i in 0 until 360 step 2) {
-                    // Draw arc segments for every 2 degrees.
-                    val sweepAngle = 2f
-                    val startAngle = i.toFloat() - 90f // Shift by 90° so 0 hue is at the top.
-                    val arcColor = Color.hsv(i.toFloat(), 1f, 1f)
-                    drawArc(
-                        color = arcColor,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngle,
-                        useCenter = false,
-                        topLeft = Offset(
-                            (size.width - 2 * radius) / 2f,
-                            (size.height - 2 * radius) / 2f
-                        ),
-                        size = Size(2 * radius, 2 * radius),
-                        style = Stroke(width = strokeWidth)
-                    )
+                    .padding(start = 4.dp)
+                    .width(140.dp)
+                    .height(50.dp),
+                items = UiTheme.entries.map { it.title },
+                labelBackgroundColor = MaterialTheme.colorScheme.background,
+                selectedValue = themeSelection,
+                label = "Theme",
+                onTouchAction = {
                 }
+            ) { themeTitle ->
+                themeSelection = themeTitle
+                onThemeStateChanged(themeTitle)
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Input for hex color value.
-        OutlinedTextField(
-            value = hexInput,
-            onValueChange = { newHex ->
-                hexInput = newHex
-                // Validate and update if valid.
-                val parsedColor = parseHex(newHex)
-                if (parsedColor != null) {
-                    selectedColor = parsedColor
-                    onColorChanged(parsedColor)
-                }
-            },
-            label = { Text("Hex Color") },
-            modifier = Modifier.padding(16.dp)
-        )
     }
 }
 

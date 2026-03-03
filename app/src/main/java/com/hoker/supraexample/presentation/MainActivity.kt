@@ -1,5 +1,6 @@
 package com.hoker.supraexample.presentation
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,7 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
 import com.hoker.supra.presentation.theme.SupraTheme
+import com.hoker.supraexample.domain.models.Consts
 import com.hoker.supraexample.domain.models.NavRoute
+import com.hoker.supraexample.presentation.models.UiTheme
 import com.hoker.supraexample.presentation.screens.ButtonScreen
 import com.hoker.supraexample.presentation.screens.TextureScreen
 import com.hoker.supraexample.presentation.screens.ColorScreen
@@ -40,22 +43,34 @@ import com.hoker.supraexample.presentation.screens.SupraFXScreen
 import com.hoker.supraexample.presentation.screens.TextScreen
 import com.hoker.supraexample.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             enableEdgeToEdge()
+
             var titleText by remember { mutableStateOf(NavRoute.HomeScreen.pageTitle) }
             val navController = rememberNavController()
 
             val mainViewModel: MainViewModel = hiltViewModel()
 
             val isDarkModeEnabled = mainViewModel.isDarkModeEnabled.collectAsState()
+            var uiThemeSelection by remember { mutableStateOf(UiTheme.fromTitle(sharedPreferences.getString(Consts.SETTINGS_SELECTED_UI_THEME, UiTheme.VIVOKEY_BLUE.title))) }
+
+            sharedPreferences.registerOnSharedPreferenceChangeListener { pref, key ->
+                if (key == Consts.SETTINGS_SELECTED_UI_THEME) {
+                    uiThemeSelection = UiTheme.fromTitle(pref.getString(key, UiTheme.VIVOKEY_BLUE.title))
+                }
+            }
 
             SupraTheme(
-                darkTheme = isDarkModeEnabled.value
+                customColorScheme = uiThemeSelection.colorScheme
             ) {
                 SupraScaffold(
                     topBar = {
@@ -121,7 +136,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(NavRoute.ColorScreen.route) {
                             titleText = NavRoute.ColorScreen.pageTitle
-                            ColorScreen()
+                            ColorScreen(
+                                themeInitialState = mainViewModel.uiThemeSettingState.title,
+                                onThemeStateChanged = { theme ->
+                                    mainViewModel.updateSettingState(Consts.SETTINGS_SELECTED_UI_THEME, theme)
+                                }
+                            )
                         }
                         composable(NavRoute.DialogScreen.route) {
                             titleText = NavRoute.DialogScreen.pageTitle
