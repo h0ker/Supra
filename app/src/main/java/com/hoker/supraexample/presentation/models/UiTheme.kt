@@ -4,11 +4,21 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.ui.graphics.Color
 import com.hoker.supra.presentation.theme.BackgroundDark
+import com.hoker.supra.presentation.theme.BackgroundPolice
 import com.hoker.supra.presentation.theme.ErrorRed
 import com.hoker.supra.presentation.theme.OnPrimaryDark
+import com.hoker.supra.presentation.theme.OnPrimaryPolice
 import com.hoker.supra.presentation.theme.PrimaryDark
+import com.hoker.supra.presentation.theme.PrimaryPolice
 import com.hoker.supra.presentation.theme.SurfaceDark
+import com.hoker.supra.presentation.theme.SurfacePolice
 import com.hoker.supra.presentation.theme.TertiaryDark
+import com.hoker.supra.presentation.theme.TertiaryPolice
+import com.hoker.supra.presentation.theme.UbBackground
+import com.hoker.supra.presentation.theme.UbOnPrimary
+import com.hoker.supra.presentation.theme.UbPrimary
+import com.hoker.supra.presentation.theme.UbSurface
+import com.hoker.supra.presentation.theme.UbTertiary
 import com.hoker.supra.presentation.theme.VivoKeyBlue
 
 enum class UiTheme(
@@ -24,6 +34,17 @@ enum class UiTheme(
             tertiary = TertiaryDark,
             background = BackgroundDark,
             surface = SurfaceDark,
+            error = ErrorRed
+        )
+    ),
+    POLICE(
+        title = "TX920",
+        colorScheme = darkColorScheme(
+            surface = UbSurface,
+            background = UbBackground,
+            tertiary = UbTertiary,
+            primary = UbPrimary,
+            onPrimary = UbOnPrimary,
             error = ErrorRed
         )
     ),

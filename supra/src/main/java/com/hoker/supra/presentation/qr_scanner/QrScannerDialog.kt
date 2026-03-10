@@ -37,6 +37,7 @@ import com.hoker.supra.presentation.text.SupraTitleTextMedium
 @Composable
 fun QrScannerDialog(
     visible: Boolean,
+    onHelpButtonClicked: (() -> Unit)? = null,
     onDismissRequest: () -> Unit,
     onQrCodeScanned: (String) -> Unit
 ) {
@@ -88,22 +89,24 @@ fun QrScannerDialog(
                                     onDismissRequest()
                                 }
                             )
-                            Button(
-                                modifier = Modifier
-                                    .padding(top = Sizes.medium)
-                                    .fillMaxWidth(),
-                                onClick = {
-                                    //TODO
-                                },
-                            ) {
-                                Card(
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
+                            onHelpButtonClicked?.let { onHelpClicked ->
+                                Button(
+                                    modifier = Modifier
+                                        .padding(top = Sizes.medium)
+                                        .fillMaxWidth(),
+                                    onClick = {
+                                        onHelpClicked()
+                                    },
                                 ) {
-                                    SupraBodyTextMedium(
-                                        text = "Help"
-                                    )
+                                    Card(
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        )
+                                    ) {
+                                        SupraBodyTextMedium(
+                                            text = "Help"
+                                        )
+                                    }
                                 }
                             }
                             Button(

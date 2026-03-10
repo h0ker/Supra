@@ -15,16 +15,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hoker.supra.presentation.fx.glitchEffect
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
 import com.hoker.supra.presentation.theme.SupraTheme
@@ -44,6 +47,8 @@ import com.hoker.supraexample.presentation.screens.TextScreen
 import com.hoker.supraexample.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -58,6 +63,8 @@ class MainActivity : ComponentActivity() {
             var titleText by remember { mutableStateOf(NavRoute.HomeScreen.pageTitle) }
             val navController = rememberNavController()
 
+            var glitchKey by remember { mutableIntStateOf(0) }
+
             val mainViewModel: MainViewModel = hiltViewModel()
 
             val isDarkModeEnabled = mainViewModel.isDarkModeEnabled.collectAsState()
@@ -66,6 +73,7 @@ class MainActivity : ComponentActivity() {
             sharedPreferences.registerOnSharedPreferenceChangeListener { pref, key ->
                 if (key == Consts.SETTINGS_SELECTED_UI_THEME) {
                     uiThemeSelection = UiTheme.fromTitle(pref.getString(key, UiTheme.VIVOKEY_BLUE.title))
+                    glitchKey = Random.nextInt()
                 }
             }
 
@@ -73,6 +81,11 @@ class MainActivity : ComponentActivity() {
                 customColorScheme = uiThemeSelection.colorScheme
             ) {
                 SupraScaffold(
+                    modifier = Modifier.glitchEffect(
+                        key = glitchKey,
+                        glitchColors = remember { listOf(Color.Cyan, Color.Yellow, Color.Magenta) },
+                        slices = 40
+                    ),
                     topBar = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
