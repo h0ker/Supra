@@ -34,7 +34,7 @@ import com.hoker.supra.presentation.text.SupraTitleTextMedium
 import com.hoker.supra.presentation.theme.SupraTheme
 import com.hoker.supraexample.domain.models.Consts
 import com.hoker.supraexample.domain.models.NavRoute
-import com.hoker.supraexample.presentation.models.UiTheme
+import com.hoker.supra.presentation.theme.UiTheme
 import com.hoker.supraexample.presentation.screens.ButtonScreen
 import com.hoker.supraexample.presentation.screens.TextureScreen
 import com.hoker.supraexample.presentation.screens.ColorScreen

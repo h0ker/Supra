@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.hoker.supra.presentation.pickers.SupraDropdownPicker
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextMedium
-import com.hoker.supraexample.presentation.models.UiTheme
+import com.hoker.supra.presentation.theme.UiTheme
 import kotlin.math.atan2
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi

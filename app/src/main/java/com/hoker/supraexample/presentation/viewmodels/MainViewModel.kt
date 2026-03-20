@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.hoker.supra.di.SupraModule
 import com.hoker.supra.presentation.fx.SupraFX
 import com.hoker.supraexample.domain.models.Consts
-import com.hoker.supraexample.presentation.models.UiTheme
+import com.hoker.supra.presentation.theme.UiTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
