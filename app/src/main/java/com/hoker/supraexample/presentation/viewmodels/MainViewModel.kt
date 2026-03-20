@@ -3,6 +3,7 @@ package com.hoker.supraexample.presentation.viewmodels
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import com.hoker.supra.di.SupraModule
 import com.hoker.supra.presentation.fx.SupraFX
 import com.hoker.supraexample.domain.models.Consts
 import com.hoker.supraexample.presentation.models.UiTheme
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
+    @SupraModule.SupraSharedPrefs private val sharedPreferences: SharedPreferences,
     val supraFX: SupraFX
 ): ViewModel() {
 

@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hoker.supra.di.SupraModule
 import com.hoker.supra.presentation.fx.glitchEffect
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
@@ -48,11 +49,11 @@ import com.hoker.supraexample.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @SupraModule.SupraSharedPrefs
     @Inject lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {

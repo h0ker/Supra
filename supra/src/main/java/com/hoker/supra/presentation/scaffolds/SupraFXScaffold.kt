@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
@@ -51,8 +52,7 @@ fun SupraFXScaffold(
     contentBackgroundColor: Color,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
-    val viewModel: GyroScaffoldViewModel = hiltViewModel()
-    //val magViewModel: MagneticFieldViewModel = hiltViewModel()
+    val viewModel: GyroScaffoldViewModel = viewModel()
     val loadingState = viewModel.supraFX.overlayState.collectAsState()
     val loadingStateCustomContent = viewModel.supraFX.overlayCustomContent.collectAsState()
 
@@ -67,9 +67,6 @@ fun SupraFXScaffold(
     var currentEffect by remember { mutableStateOf<Color?>(null) }
     val effectProgress = remember { Animatable(0f) }
     val alpha = remember { Animatable(0f) }
-
-    //Degauss effect
-    //val magneticInterference by viewModel.supraFX.magneticInterference.collectAsState()
 
     var snackbarMessage by remember { mutableStateOf<String?>(null) }
 
@@ -139,9 +136,7 @@ fun SupraFXScaffold(
         contentAlignment = Alignment.Center
     ) {
         Scaffold(
-            modifier = modifier
-                .fillMaxSize(),
-                //.magneticGlow(magneticInterference),
+            modifier = modifier.fillMaxSize(),
             topBar = {
                 topBar?.invoke()
             },
