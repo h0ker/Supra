@@ -1,6 +1,6 @@
 [versions]
-agp = "8.13.1"
-comGoogleDevtoolsKspGradlePlugin = "2.2.20-2.0.2"
+agp = "9.1.1"
+comGoogleDevtoolsKspGradlePlugin = "2.3.2"
 hiltAndroidGradlePlugin = "2.57.2"
 kotlin = "2.2.20"
 coreKtx = "1.17.0"

@@ -74,9 +74,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
-                groupId = "com.github.hoker"
+                groupId = "com.github.h0ker"
                 artifactId = "Supra"
-                version = "0.2.5"
+                version = "0.2.6"
             }
         }
     }
