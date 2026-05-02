@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hoker.supra.di.SupraModule
+import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.fx.glitchEffect
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
@@ -87,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         glitchColors = remember { listOf(Color.Cyan, Color.Yellow, Color.Magenta) },
                         slices = 40
                     ),
+                    textureType = TextureType.TOPOGRAPHIC,
                     topBar = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

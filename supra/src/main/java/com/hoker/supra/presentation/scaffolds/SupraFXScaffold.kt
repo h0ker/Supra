@@ -8,6 +8,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,15 +34,22 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hoker.supra.domain.OverlayState
+import com.hoker.supra.presentation.cards.TextureType
+import com.hoker.supra.presentation.cards.darkenColor
 import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.snackbars.SupraSnackbar
 import com.hoker.supra.utils.ModifierUtils.Companion.magneticGlow
+import kotlin.random.Random
 
 @Composable
 fun SupraFXScaffold(
@@ -50,6 +58,7 @@ fun SupraFXScaffold(
     bottomBar: (@Composable () -> Unit)? = null,
     borderColor: Color,
     contentBackgroundColor: Color,
+    textureType: TextureType? = null,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = viewModel()
@@ -103,6 +112,10 @@ fun SupraFXScaffold(
         }
     }
 
+    // Remember texture resources to keep them stable across recompositions
+    val textureRotation = remember { Random.nextInt(2) * 180f }
+    val textureResId = remember(textureType) { textureType?.getTextureId() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -135,6 +148,20 @@ fun SupraFXScaffold(
             },
         contentAlignment = Alignment.Center
     ) {
+        // Background texture layer (bottommost)
+        if (textureResId != null) {
+            Image(
+                painter = painterResource(textureResId),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(darkenColor(borderColor, .2f)),
+                modifier = Modifier
+                    .graphicsLayer {
+                        rotationZ = textureRotation
+                    }
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
         Scaffold(
             modifier = modifier.fillMaxSize(),
             topBar = {
