@@ -59,6 +59,7 @@ fun SupraFXScaffold(
     borderColor: Color,
     contentBackgroundColor: Color,
     textureType: TextureType? = null,
+    tint: Color = darkenColor(borderColor, .2f),
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = viewModel()
@@ -153,7 +154,7 @@ fun SupraFXScaffold(
             Image(
                 painter = painterResource(textureResId),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(darkenColor(borderColor, .2f)),
+                colorFilter = ColorFilter.tint(tint),
                 modifier = Modifier
                     .graphicsLayer {
                         rotationZ = textureRotation
