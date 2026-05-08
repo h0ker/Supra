@@ -29,6 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hoker.supra.di.SupraModule
 import com.hoker.supra.presentation.cards.TextureType
+import com.hoker.supra.presentation.scaffolds.SupraBackground
 import com.hoker.supra.presentation.fx.glitchEffect
 import com.hoker.supra.presentation.scaffolds.SupraScaffold
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
@@ -36,6 +37,7 @@ import com.hoker.supra.presentation.theme.SupraTheme
 import com.hoker.supraexample.domain.models.Consts
 import com.hoker.supraexample.domain.models.NavRoute
 import com.hoker.supra.presentation.theme.UiTheme
+import com.hoker.supra.presentation.theme.VivoKeyBlue
 import com.hoker.supraexample.presentation.screens.ButtonScreen
 import com.hoker.supraexample.presentation.screens.TextureScreen
 import com.hoker.supraexample.presentation.screens.ColorScreen
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
             }
 
             SupraTheme(
-                customColorScheme = uiThemeSelection.colorScheme
+                customColorScheme = UiTheme.DARK.colorScheme
             ) {
                 SupraScaffold(
                     modifier = Modifier.glitchEffect(
@@ -88,7 +90,12 @@ class MainActivity : ComponentActivity() {
                         glitchColors = remember { listOf(Color.Cyan, Color.Yellow, Color.Magenta) },
                         slices = 40
                     ),
-                    textureType = TextureType.TOPOGRAPHIC,
+                    background = SupraBackground.DiagonalStripes(
+                        stripeColor = Color.Yellow,
+                        stripeWidth = 40f,
+                        gapWidth = 120f,
+                        animated = false
+                    ),
                     topBar = {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

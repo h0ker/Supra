@@ -48,6 +48,32 @@ fun SupraFXScreen(
             .padding(Sizes.medium),
         verticalArrangement = Arrangement.spacedBy(Sizes.medium)
     ) {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            SupraTitleTextSmall(
+                modifier = Modifier.padding(start = 16.dp),
+                text = "Background Surface"
+            )
+            SupraMultiSelector(
+                modifier = Modifier
+                    .height(36.dp)
+                    .width(150.dp),
+                options = SettingsBooleanState.entries.map { it.displayName },
+                selectedOption = SettingsBooleanState.fromBoolean(isAudioEnabled.value).displayName,
+                onOptionSelect = { option ->
+                    when (option) {
+                        SettingsBooleanState.ENABLED.displayName -> viewModel.supraFX.setAudioSettingState(true)
+                        SettingsBooleanState.DISABLED.displayName -> viewModel.supraFX.setAudioSettingState(false)
+                    }
+                }
+            )
+        }
+
         Button(
             onClick = {
                 viewModel.startIndeterminateLoading5Sec()

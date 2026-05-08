@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hoker.supra.domain.OverlayState
-import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.cards.darkenColor
 import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
@@ -58,8 +57,7 @@ fun SupraFXScaffold(
     bottomBar: (@Composable () -> Unit)? = null,
     borderColor: Color,
     contentBackgroundColor: Color,
-    textureType: TextureType? = null,
-    tint: Color = darkenColor(borderColor, .2f),
+    background: SupraBackground? = null,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = viewModel()
@@ -113,9 +111,14 @@ fun SupraFXScaffold(
         }
     }
 
+    // Derive the tint/fallback color for backgrounds
+    val defaultTint = darkenColor(borderColor, .2f)
+
     // Remember texture resources to keep them stable across recompositions
     val textureRotation = remember { Random.nextInt(2) * 180f }
-    val textureResId = remember(textureType) { textureType?.getTextureId() }
+    val textureResId = remember(background) {
+        (background as? SupraBackground.Texture)?.textureType?.getTextureId()
+    }
 
     Box(
         modifier = Modifier
@@ -149,19 +152,37 @@ fun SupraFXScaffold(
             },
         contentAlignment = Alignment.Center
     ) {
-        // Background texture layer (bottommost)
-        if (textureResId != null) {
-            Image(
-                painter = painterResource(textureResId),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(tint),
-                modifier = Modifier
-                    .graphicsLayer {
-                        rotationZ = textureRotation
-                    }
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+        // Background layer (bottommost)
+        when (background) {
+            is SupraBackground.Texture -> {
+                if (textureResId != null) {
+                    val textureTint = background.tint ?: defaultTint
+                    Image(
+                        painter = painterResource(textureResId),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(textureTint),
+                        modifier = Modifier
+                            .graphicsLayer {
+                                rotationZ = textureRotation
+                            }
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+            is SupraBackground.AnimatedGrid -> {
+                AnimatedGridBackground(
+                    config = background,
+                    fallbackColor = defaultTint
+                )
+            }
+            is SupraBackground.DiagonalStripes -> {
+                DiagonalStripesBackground(
+                    config = background,
+                    fallbackColor = defaultTint
+                )
+            }
+            null -> { /* No background */ }
         }
         Scaffold(
             modifier = modifier.fillMaxSize(),

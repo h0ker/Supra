@@ -18,8 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.hoker.supra.presentation.cards.TextureType
-import com.hoker.supra.presentation.cards.darkenColor
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,8 +29,7 @@ fun SupraScaffold(
     drawerContent: (@Composable (onCloseDrawer: () -> Unit) -> Unit)? = null,
     borderColor: Color = MaterialTheme.colorScheme.primary,
     contentBackgroundColor: Color = MaterialTheme.colorScheme.background,
-    textureType: TextureType? = null,
-    tint: Color = darkenColor(borderColor, .2f),
+    background: SupraBackground? = null,
     content: @Composable (modifier: Modifier) -> Unit
 ){
     if (drawerContent != null) {
@@ -86,8 +83,7 @@ fun SupraScaffold(
                 bottomBar = bottomBar,
                 borderColor = borderColor,
                 contentBackgroundColor = contentBackgroundColor,
-                textureType = textureType,
-                tint = tint,
+                background = background,
                 content = content
             )
         }
@@ -98,8 +94,7 @@ fun SupraScaffold(
             bottomBar = bottomBar,
             borderColor = borderColor,
             contentBackgroundColor = contentBackgroundColor,
-            textureType = textureType,
-            tint = tint,
+            background = background,
             content = content
         )
     }
