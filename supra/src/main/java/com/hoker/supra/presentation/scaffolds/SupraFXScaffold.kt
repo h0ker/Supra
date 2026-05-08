@@ -173,7 +173,9 @@ fun SupraFXScaffold(
             is SupraBackground.AnimatedGrid -> {
                 AnimatedGridBackground(
                     config = background,
-                    fallbackColor = defaultTint
+                    fallbackColor = defaultTint,
+                    gyroXOffset = xOffset,
+                    gyroYOffset = yOffset
                 )
             }
             is SupraBackground.DiagonalStripes -> {

@@ -90,11 +90,8 @@ class MainActivity : ComponentActivity() {
                         glitchColors = remember { listOf(Color.Cyan, Color.Yellow, Color.Magenta) },
                         slices = 40
                     ),
-                    background = SupraBackground.DiagonalStripes(
-                        stripeColor = Color.Yellow,
-                        stripeWidth = 40f,
-                        gapWidth = 120f,
-                        animated = false
+                    background = SupraBackground.AnimatedGrid(
+                        symbolColor = VivoKeyBlue
                     ),
                     topBar = {
                         Row(

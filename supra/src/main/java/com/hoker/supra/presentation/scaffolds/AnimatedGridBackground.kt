@@ -2,9 +2,12 @@ package com.hoker.supra.presentation.scaffolds
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,16 +23,24 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.tan
 
 /**
- * Renders a full-size animated background of "+" symbols arranged in a grid
- * that continuously scrolls diagonally (up and to the left).
+ * Renders a full-size background of "+" symbols arranged in a grid that
+ * shifts in response to gyroscope input, creating a parallax effect
+ * against the content layer.
  *
  * The grid is drawn on a Canvas for performance — each "+" is drawn as two
  * small crossed lines rather than text, keeping the draw calls lightweight.
+ *
+ * @param config     Configuration for symbol appearance and spacing.
+ * @param fallbackColor Color used for symbols when [SupraBackground.AnimatedGrid.symbolColor] is null.
+ * @param gyroXOffset Horizontal gyroscope offset in dp (from [GyroScaffoldViewModel]).
+ * @param gyroYOffset Vertical gyroscope offset in dp (from [GyroScaffoldViewModel]).
  */
 @Composable
 fun AnimatedGridBackground(
     config: SupraBackground.AnimatedGrid,
-    fallbackColor: Color
+    fallbackColor: Color,
+    gyroXOffset: Float = 0f,
+    gyroYOffset: Float = 0f
 ) {
     val symbolColor = config.symbolColor ?: fallbackColor
     val density = LocalDensity.current
@@ -39,37 +50,42 @@ fun AnimatedGridBackground(
     val armLength = symbolSizePx / 2f
     val strokeWidth = symbolSizePx / 7f
 
-    val scrollFraction = if (config.animated) {
-        val infiniteTransition = rememberInfiniteTransition(label = "gridScroll")
-        val fraction by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = config.scrollSpeed,
-                    easing = LinearEasing
-                ),
-                repeatMode = RepeatMode.Restart
-            ),
-            label = "scrollFraction"
-        )
-        fraction
-    } else {
-        0f
-    }
+    // Smooth the raw gyro values with a low-stiffness spring so the grid
+    // drifts fluidly rather than snapping to each sensor reading.
+    val gyroMultiplier = 3f
+    val smoothX by animateFloatAsState(
+        targetValue = gyroXOffset * gyroMultiplier,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "gridGyroX"
+    )
+    val smoothY by animateFloatAsState(
+        targetValue = gyroYOffset * gyroMultiplier,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "gridGyroY"
+    )
+
+    val gyroOffsetXPx = with(density) { smoothX.dp.toPx() }
+    val gyroOffsetYPx = with(density) { smoothY.dp.toPx() }
 
     Canvas(modifier = Modifier.fillMaxSize()) {
         val width = size.width
         val height = size.height
 
-        // scrollFraction goes 0→1; we shift by one full gridSpacing per cycle
-        val offsetX = -(scrollFraction * gridSpacingPx)
-        val offsetY = -(scrollFraction * gridSpacingPx)
+        // Centre the grid: shift the origin so the pattern is symmetric
+        // around the canvas midpoint regardless of spacing/size combos.
+        val centerOffsetX = (width % gridSpacingPx) / 2f
+        val centerOffsetY = (height % gridSpacingPx) / 2f
 
-        // We need to draw enough symbols to cover the entire canvas plus overflow
-        // for the scrolling. Add extra rows/columns on each side.
-        val cols = (width / gridSpacingPx).toInt() + 3
-        val rows = (height / gridSpacingPx).toInt() + 3
+        // We need to draw enough symbols to cover the entire canvas plus
+        // overflow for the gyro shift. Add extra rows/columns on each side.
+        val cols = (width / gridSpacingPx).toInt() + 5
+        val rows = (height / gridSpacingPx).toInt() + 5
 
         val paint = android.graphics.Paint().apply {
             color = android.graphics.Color.argb(
@@ -84,10 +100,10 @@ fun AnimatedGridBackground(
         }
 
         drawContext.canvas.nativeCanvas.apply {
-            for (row in -1..rows) {
-                for (col in -1..cols) {
-                    val cx = col * gridSpacingPx + offsetX
-                    val cy = row * gridSpacingPx + offsetY
+            for (row in -2..rows) {
+                for (col in -2..cols) {
+                    val cx = col * gridSpacingPx + centerOffsetX + gyroOffsetXPx
+                    val cy = row * gridSpacingPx + centerOffsetY + gyroOffsetYPx
 
                     // Horizontal arm of the +
                     drawLine(

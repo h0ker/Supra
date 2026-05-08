@@ -21,24 +21,19 @@ sealed class SupraBackground {
     ) : SupraBackground()
 
     /**
-     * An animated background that renders a grid of "+" symbols continuously
-     * scrolling diagonally (up and to the left).
+     * A gyroscope-reactive background that renders a grid of "+" symbols.
+     * The grid shifts in response to device tilt, creating a parallax effect
+     * against the content layer.
      *
      * @param symbolColor The color of the "+" symbols. If null, defaults to a
      *                    darkened version of the scaffold's borderColor.
      * @param symbolSize The font size of each "+" symbol in sp.
      * @param gridSpacing The spacing between symbols in dp.
-     * @param scrollSpeed Duration in milliseconds for one full cycle of the scroll animation.
-     *                    Higher values = slower scrolling.
-     * @param animated Whether the grid scrolls continuously. When false the grid
-     *                is rendered statically with no animation.
      */
     data class AnimatedGrid(
         val symbolColor: Color? = null,
-        val symbolSize: Float = 14f,
-        val gridSpacing: Float = 40f,
-        val scrollSpeed: Int = 15000,
-        val animated: Boolean = true
+        val symbolSize: Float = 10f,
+        val gridSpacing: Float = 30f
     ) : SupraBackground()
 
     /**
