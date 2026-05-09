@@ -76,7 +76,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.h0ker"
                 artifactId = "Supra"
-                version = "0.2.10"
+                version = "0.2.11"
             }
         }
     }

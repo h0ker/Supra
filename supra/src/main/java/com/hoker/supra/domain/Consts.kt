@@ -5,4 +5,5 @@ object Consts {
     const val SETTINGS_AUDIO_ENABLED = "settings_audio_enabled"
     const val SETTINGS_VIBRATION_ENABLED = "settings_vibration_enabled"
     const val SETTINGS_SELECTED_UI_THEME = "settings_selected_ui_theme"
+    const val SETTINGS_SELECTED_BACKGROUND = "settings_selected_background"
 }
