@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import androidx.compose.animation.core.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
+import com.hoker.supra.presentation.theme.Ink5
 
 @Composable
 fun RandomLoadingGlyph(
@@ -19,11 +20,12 @@ fun RandomLoadingGlyph(
     canvasSize: Dp = 32.dp,
     rotationStepDuration: Int = 200,
     pauseDuration: Long = 500L,
-    activeColor: Color = MaterialTheme.colorScheme.tertiary
+    activeColor: Color = MaterialTheme.colorScheme.secondary,
+    idleColor: Color = Ink5,
+    glyph: Glyph = remember { LoadingGlyphs.glyphList.random() }
 ) {
 
-    val color = if (isLoading) activeColor else MaterialTheme.colorScheme.onPrimary
-    val glyph = LoadingGlyphs.glyphList.random()
+    val color = if (isLoading) activeColor else idleColor
 
     // animatable angle
     val rotation = remember { Animatable(0f) }

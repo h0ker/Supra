@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraTitleTextMedium
 import com.hoker.supraexample.domain.models.NavRoute
@@ -19,8 +18,8 @@ fun DrawerContent(
     onOptionSelected: (NavRoute) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        modifier = Modifier.padding(Sizes.medium),
+        verticalArrangement = Arrangement.spacedBy(Sizes.tiny)
     ) {
         items(optionsList) { optionRoute ->
             SupraTitleTextMedium(

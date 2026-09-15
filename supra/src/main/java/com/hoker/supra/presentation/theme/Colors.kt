@@ -20,16 +20,21 @@ val PrimaryLight = Color(0xFF000000) //Black
 val SecondaryLight = Color(0xFFF67448) //Orange
 val TertiaryLight = Color(0xFFFDFE1B) //Yellow
 
-//Police
-val BackgroundPolice = Color(0xFF342430)
-val PrimaryPolice = Color(0xFFF0DD31)
-val TertiaryPolice = Color(0xFF554256)
-val SurfacePolice = Color(0xFF452B2C)
-val OnPrimaryPolice = Color.White
+//Graphic Realism neutrals
+val Ink0 = Color(0xFF07090A) //Void
+val Ink1 = Color(0xFF0B0D0E) //Content surface
+val Ink2 = Color(0xFF15191C) //Bezel / chrome
+val Ink3 = Color(0xFF181C1F) //Panel, list row
+val Ink4 = Color(0xFF2E3538) //Fills, inactive marks
+val Ink5 = Color(0xFF6C7378) //Dim labels, rail ticks
+val Ink7 = Color(0xFFE6ECEF) //Primary text (not pure white)
 
-//TX920
-val UbPrimary = Color(0xFFB69D46)
-val UbBackground = Color(0xFF706A75)
-val UbSurface = Color(0xFFA3853A)
-val UbTertiary = Color(0xFFD9D5D1)
-val UbOnPrimary = Color.White
+//The one loud colour, state only
+val AccentLive = Color(0xFFFDFE1B)
+val AccentBrass = Color(0xFFB69D46)
+val AccentOrange = Color(0xFFF67448)
+val AccentHiVis = Color(0xFFF0DD31)
+val AccentBlue = VivoKeyBlue
+
+//Data blue: demoted from accent to readout duty
+val DataBlue = TertiaryDark

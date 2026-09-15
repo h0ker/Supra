@@ -13,4 +13,11 @@ object FontSizes {
     val titleLarge = 48.sp
     val titleMedium = 32.sp
     val titleSmall = 24.sp
+
+    //Display block
+    val displayBlock = 56.sp
+
+    //Data gutter
+    val dataLabel = 9.sp
+    val dataValue = 12.sp
 }

@@ -1,24 +1,26 @@
 package com.hoker.supra.presentation.dialogs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.hoker.supra.presentation.shapes.CustomCornersShape
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraTitleTextSmall
+import com.hoker.supra.presentation.theme.Ink3
 
 @Composable
 fun SupraMultiSelectionDialog(
@@ -39,7 +41,7 @@ fun SupraMultiSelectionDialog(
             }
         ) {
             Card(
-                shape = RoundedCornerShape(16.dp),
+                shape = SupraShapes.control,
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
@@ -57,77 +59,43 @@ fun SupraMultiSelectionDialog(
                         color = MaterialTheme.colorScheme.onPrimary,
                         textAlignment = TextAlign.Center
                     )
-                    Card(
-                        modifier = Modifier
-                            .clickable {
-                                onFirstOptionClicked()
-                            }
-                            .fillMaxWidth()
-                            .padding(horizontal = Sizes.small),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        shape = CustomCornersShape(16.dp, 16.dp, 0.dp, 0.dp)
-                    ) {
-                        SupraBodyTextMedium(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            textAlignment = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            text = firstOptionText
+                    SelectionBlock(
+                        text = firstOptionText,
+                        onClick = onFirstOptionClicked
+                    )
+                    if (secondOptionText != null) {
+                        SelectionBlock(
+                            text = secondOptionText,
+                            onClick = { onSecondOptionClicked?.invoke() }
                         )
                     }
-
-                    if (secondOptionText != null) {
-                        Card(
-                            modifier = Modifier
-                                .clickable {
-                                    onSecondOptionClicked?.invoke()
-                                }
-                                .fillMaxWidth()
-                                .padding(horizontal = Sizes.small),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            ),
-                            shape = CustomCornersShape(0.dp, 0.dp, 0.dp, 0.dp)
-                        ) {
-                            SupraBodyTextMedium(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                textAlignment = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                text = secondOptionText
-                            )
-                        }
-                    }
-
                     if (thirdOptionText != null) {
-                        Card(
-                            modifier = Modifier
-                                .clickable {
-                                    onThirdOptionClicked?.invoke()
-                                }
-                                .fillMaxWidth()
-                                .padding(horizontal = Sizes.small),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            ),
-                            shape = CustomCornersShape(0.dp, 0.dp, Sizes.medium, Sizes.medium)
-                        ) {
-                            SupraBodyTextMedium(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                textAlignment = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                text = thirdOptionText
-                            )
-                        }
+                        SelectionBlock(
+                            text = thirdOptionText,
+                            onClick = { onThirdOptionClicked?.invoke() }
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun SelectionBlock(
+    text: String,
+    onClick: () -> Unit
+) {
+    SupraBodyTextMedium(
+        modifier = Modifier
+            .padding(horizontal = Sizes.small)
+            .fillMaxWidth()
+            .clip(SupraShapes.control)
+            .background(Ink3)
+            .clickable { onClick() }
+            .padding(12.dp),
+        textAlignment = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onPrimary,
+        text = text
+    )
 }

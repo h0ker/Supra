@@ -5,21 +5,30 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,6 +54,7 @@ import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.cards.darkenColor
 import com.hoker.supra.presentation.indicators.IndeterminateLoadingIndicator
 import com.hoker.supra.presentation.indicators.ScanIndicator
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.snackbars.SupraSnackbar
 import com.hoker.supra.utils.ModifierUtils.Companion.magneticGlow
@@ -58,6 +68,12 @@ fun SupraFXScaffold(
     borderColor: Color,
     contentBackgroundColor: Color,
     background: SupraBackground? = null,
+    brackets: Boolean = true,
+    title: String? = null,
+    readout: Pair<String?, String?>? = null,
+    rail: Boolean = false,
+    railStamp: String? = null,
+    railMeter: Boolean = false,
     content: @Composable (modifier: Modifier) -> Unit
 ) {
     val viewModel: GyroScaffoldViewModel = viewModel()
@@ -186,13 +202,76 @@ fun SupraFXScaffold(
             }
             null -> { /* No background */ }
         }
+        if (brackets) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars)
+                    .supraBrackets(MaterialTheme.colorScheme.secondary)
+            )
+        }
+        // Bezel padding matches the bracket insets (4dp top, 14dp elsewhere), so the corner title, rail and
+        // content surface all sit inside the same box as the brackets, clear of rounded screen corners and cutouts.
+        val bezelPadding = SupraChromeDefaults.BracketInset
+        val bezelPaddingTop = SupraChromeDefaults.BracketInsetTop
+        val cornerTitle = title ?: readout?.first
+        val hasCorner = cornerTitle != null || readout?.second != null
+        val hasTopBar = topBar != null || hasCorner
         Scaffold(
             modifier = modifier.fillMaxSize(),
             topBar = {
-                topBar?.invoke()
+                if (hasCorner) {
+                    // Bracket furniture sits above the top bar, so it takes over the status bar inset.
+                    // The top bar stays its own row underneath.
+                    Column(
+                        modifier = Modifier
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                            .padding(start = bezelPadding, end = bezelPadding, top = bezelPaddingTop)
+                    ) {
+                        SupraBracketTitle(
+                            title = cornerTitle,
+                            index = readout?.second
+                        )
+                        topBar?.invoke()
+                    }
+                } else if (topBar != null) {
+                    Box(
+                        modifier = Modifier.padding(horizontal = bezelPadding)
+                    ) {
+                        topBar()
+                    }
+                }
             },
             bottomBar = {
-                bottomBar?.invoke()
+                if (rail) {
+                    Column {
+                        val railModifier = Modifier
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                            .padding(horizontal = bezelPadding)
+                        if (railMeter) {
+                            MagnetometerRail(
+                                modifier = railModifier,
+                                stamp = railStamp
+                            )
+                        } else {
+                            SupraRail(
+                                modifier = railModifier,
+                                stamp = railStamp
+                            )
+                        }
+                        if (bottomBar != null) {
+                            bottomBar()
+                        } else {
+                            Spacer(
+                                Modifier
+                                    .padding(top = bezelPadding)
+                                    .windowInsetsBottomHeight(WindowInsets.systemBars)
+                            )
+                        }
+                    }
+                } else {
+                    bottomBar?.invoke()
+                }
             },
             containerColor = Color.Transparent
         ) { paddingValues ->
@@ -200,10 +279,19 @@ fun SupraFXScaffold(
                 modifier = Modifier
                     .fillMaxSize()
                     .offset(x = animatedXOffset.value, y = animatedYOffset.value)
-                    .padding(vertical = 8.dp, horizontal = 8.dp)
+                    .padding(
+                        start = bezelPadding,
+                        end = bezelPadding,
+                        top = if (hasTopBar) 8.dp else bezelPaddingTop,
+                        bottom = when {
+                            rail -> 0.dp // the rail carries its own 8dp top padding
+                            bottomBar != null -> 8.dp
+                            else -> bezelPadding
+                        }
+                    )
                     .padding(paddingValues)
-                    .shadow(elevation = 3.dp, shape = RoundedCornerShape(32.dp))
-                    .clip(RoundedCornerShape(32.dp)),
+                    .shadow(elevation = 3.dp, shape = SupraShapes.surface)
+                    .clip(SupraShapes.surface),
             ) {
                 Surface(
                     modifier = Modifier
@@ -251,11 +339,38 @@ fun SupraFXScaffold(
                 message = snackbarMessage ?: "",
                 onDismiss = {
                     snackbarMessage = null
-                },
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                borderColor = MaterialTheme.colorScheme.tertiary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                }
             )
         }
     }
+}
+/**
+ * The rail driven by the magnetometer: the one genuinely live instrument on the bezel. The sensor only
+ * listens while this is composed, and falls back to the static rail on devices without a magnetometer.
+ */
+@Composable
+private fun MagnetometerRail(
+    modifier: Modifier = Modifier,
+    stamp: String?
+) {
+    val magnetometer: MagneticFieldViewModel = viewModel()
+
+    if (!magnetometer.hasSensor) {
+        SupraRail(modifier = modifier, stamp = stamp)
+        return
+    }
+
+    DisposableEffect(magnetometer) {
+        magnetometer.start()
+        onDispose { magnetometer.stop() }
+    }
+
+    val field by magnetometer.normalisedField.collectAsState()
+    val level by animateFloatAsState(targetValue = field, label = "rail_level")
+
+    SupraRail(
+        modifier = modifier,
+        stamp = stamp,
+        level = level
+    )
 }

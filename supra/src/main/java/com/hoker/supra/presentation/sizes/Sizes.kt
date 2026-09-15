@@ -17,7 +17,11 @@ object Sizes {
 
     //Pickers
     val defaultDropdownPickerWidth = 400.dp
-    val defaultDropdownPickerHeight = 64.dp
+    val defaultDropdownPickerHeight = 48.dp
+
+    //Controls: text field, picker, button. 44dp is the floor
+    val controlHeight = 48.dp
+    val dropdownHeight = 48.dp
 
     //Padding
     val defaultPadding = 16.dp

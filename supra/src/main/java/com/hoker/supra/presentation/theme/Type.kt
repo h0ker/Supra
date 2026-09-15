@@ -52,5 +52,27 @@ val Typography = Typography(
         fontFamily = Univers,
         fontWeight = FontWeight.Light,
         fontSize = FontSizes.titleLarge
+    ),
+    //Display block
+    displayLarge = TextStyle(
+        fontFamily = Univers,
+        fontWeight = FontWeight.Bold,
+        fontSize = FontSizes.displayBlock,
+        lineHeight = 49.sp, //.88 leading
+        letterSpacing = (-1.4).sp //-2.5%
+    ),
+    //Data gutter label
+    labelSmall = TextStyle(
+        fontFamily = NBInternational,
+        fontWeight = FontWeight.Normal,
+        fontSize = FontSizes.dataLabel,
+        letterSpacing = 1.44.sp //.16em
+    ),
+    //Data gutter value
+    labelMedium = TextStyle(
+        fontFamily = NBInternational,
+        fontWeight = FontWeight.Normal,
+        fontSize = FontSizes.dataValue,
+        letterSpacing = .48.sp
     )
 )
