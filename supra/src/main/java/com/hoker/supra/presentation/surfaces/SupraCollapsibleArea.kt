@@ -125,15 +125,13 @@ fun SupraCollapsibleArea(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = Sizes.small, end = Sizes.medium),
+                    .padding(start = Sizes.rowInset, end = Sizes.rowInsetTrailing),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Sizes.small)
             ) {
                 leftIcon?.invoke()
                 Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = if (leftIcon == null) Sizes.small else 0.dp),
+                    modifier = Modifier.weight(1f),
                     text = title,
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
                     color = Ink7,

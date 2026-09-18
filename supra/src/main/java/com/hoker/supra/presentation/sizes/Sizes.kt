@@ -31,4 +31,8 @@ object Sizes {
     val defaultListItemWidth = 200.dp
 
     val defaultCornerRadius = 16.dp
+
+    //Row content insets. Glyphs fill their icon boxes, so the trailing edge needs +2dp to look level
+    val rowInset = 16.dp
+    val rowInsetTrailing = 18.dp
 }

@@ -23,6 +23,7 @@ import com.hoker.supra.presentation.cards.MaterialStyle
 import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.shapes.SupraShapes
+import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.theme.Ink2
 import com.hoker.supra.presentation.theme.Ink3
 import com.hoker.supra.presentation.theme.Ink5
@@ -66,30 +67,30 @@ fun SupraTextureListItem(
         shape = SupraShapes.row
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = Sizes.rowInset, end = Sizes.rowInsetTrailing),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(Sizes.small)
         ) {
             Row(
-                modifier = Modifier.weight(1f, fill = false),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Sizes.small)
             ) {
                 leftIconId?.let { iconId ->
                     Icon(
-                        modifier = Modifier.padding(start = 8.dp),
                         painter = painterResource(id = iconId),
                         contentDescription = "left icon"
                     )
                 }
                 leftIconImageVector?.let { vector ->
                     Icon(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         imageVector = vector,
                         contentDescription = "left icon"
                     )
                 }
                 Text(
-                    modifier = Modifier.padding(start = 8.dp),
                     text = title,
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
                     color = MaterialTheme.colorScheme.onPrimary,
@@ -98,11 +99,11 @@ fun SupraTextureListItem(
                 )
             }
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Sizes.small)
             ) {
                 status?.let {
                     Text(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         text = it.uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         color = if (live) MaterialTheme.colorScheme.secondary else Ink5
@@ -110,14 +111,12 @@ fun SupraTextureListItem(
                 }
                 rightIconId?.let { iconId ->
                     Icon(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         painter = painterResource(id = iconId),
                         contentDescription = "right icon"
                     )
                 }
                 rightIconImageVector?.let { vector ->
                     Icon(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         imageVector = vector,
                         contentDescription = "right icon"
                     )

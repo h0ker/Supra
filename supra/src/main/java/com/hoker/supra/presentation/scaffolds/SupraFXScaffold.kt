@@ -232,7 +232,10 @@ fun SupraFXScaffold(
                             title = cornerTitle,
                             index = readout?.second
                         )
-                        topBar?.invoke()
+                        // 16dp keeps the bracket register (title, index) separate from the app's own bar
+                        topBar?.let {
+                            Box(modifier = Modifier.padding(top = 16.dp)) { it() }
+                        }
                     }
                 } else if (topBar != null) {
                     Box(
@@ -244,10 +247,15 @@ fun SupraFXScaffold(
             },
             bottomBar = {
                 if (rail) {
+                    // Furniture is always outermost: app furniture sits above the rail, and nothing an
+                    // app supplies renders below it or outside the bracket box
                     Column {
                         val railModifier = Modifier
                             .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                             .padding(horizontal = bezelPadding)
+                        bottomBar?.let {
+                            Box(modifier = railModifier.padding(top = 8.dp)) { it() }
+                        }
                         if (railMeter) {
                             MagnetometerRail(
                                 modifier = railModifier,
@@ -259,15 +267,11 @@ fun SupraFXScaffold(
                                 stamp = railStamp
                             )
                         }
-                        if (bottomBar != null) {
-                            bottomBar()
-                        } else {
-                            Spacer(
-                                Modifier
-                                    .padding(top = bezelPadding)
-                                    .windowInsetsBottomHeight(WindowInsets.systemBars)
-                            )
-                        }
+                        Spacer(
+                            Modifier
+                                .padding(top = bezelPadding)
+                                .windowInsetsBottomHeight(WindowInsets.systemBars)
+                        )
                     }
                 } else {
                     bottomBar?.invoke()
@@ -284,7 +288,7 @@ fun SupraFXScaffold(
                         end = bezelPadding,
                         top = if (hasTopBar) 8.dp else bezelPaddingTop,
                         bottom = when {
-                            rail -> 0.dp // the rail carries its own 8dp top padding
+                            rail -> 0.dp // the rail, and a bottom bar above it, carry their own 8dp top padding
                             bottomBar != null -> 8.dp
                             else -> bezelPadding
                         }
