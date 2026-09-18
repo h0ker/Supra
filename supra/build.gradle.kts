@@ -56,7 +56,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -80,7 +79,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.h0ker"
                 artifactId = "Supra"
-                version = "0.3.0"
+                version = "0.3.1"
             }
         }
     }

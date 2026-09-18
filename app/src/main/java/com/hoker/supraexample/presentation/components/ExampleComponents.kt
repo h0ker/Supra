@@ -17,10 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.hoker.supra.presentation.controls.SupraMultiSelector
 import com.hoker.supra.presentation.sizes.Sizes
-import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraDisplayBlock
 import com.hoker.supra.presentation.theme.Ink5
 
@@ -78,9 +79,16 @@ fun SettingRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        SupraBodyTextMedium(
-            modifier = Modifier.weight(1f),
-            text = label
+        // Body scale, so a row inside a collapsible never outshouts the section header
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = Sizes.small),
+            text = label,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
+            color = MaterialTheme.colorScheme.onPrimary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         SupraMultiSelector(
             modifier = Modifier

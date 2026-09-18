@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -32,7 +31,6 @@ import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.theme.ErrorRed
 import com.hoker.supra.presentation.theme.Ink2
 import com.hoker.supra.presentation.theme.Ink3
-import com.hoker.supra.presentation.theme.Ink4
 import com.hoker.supra.presentation.theme.Ink5
 import com.hoker.supra.presentation.theme.Ink7
 
@@ -41,7 +39,7 @@ import com.hoker.supra.presentation.theme.Ink7
  *
  * - One per screen; give it the whole content surface (it fills what it's given).
  * - Mono by default, since the content is usually machine data.
- * - Counter, box and left edge turn red past [maxBytes]. The caret is the only accent in a resting field.
+ * - Counter and border turn red past [maxBytes]. The caret is the only accent in a resting field.
  * - Put the committing button in [action], pinned to the field, not floating above the keyboard.
  *
  * @param byteCount Show a UTF-8 byte counter in the top-right corner.
@@ -68,13 +66,9 @@ fun SupraFullscreenTextField(
     val edge = when {
         over -> ErrorRed
         focused -> accent
-        else -> Ink4
+        else -> Ink2 // hairline at rest
     }
-    val box = when {
-        over -> ErrorRed
-        focused -> accent
-        else -> Ink2
-    }
+    val edgeWidth = if (over || focused) 2.dp else 1.dp
     val meta = counter ?: if (byteCount) "$bytes${maxBytes?.let { " / $it" } ?: ""} BYTES" else null
 
     Column(
@@ -85,21 +79,20 @@ fun SupraFullscreenTextField(
             .background(Ink3)
             .drawWithContent {
                 drawContent()
-                val hairline = 1.dp.toPx()
-                // Double width because the clip trims the outer half, leaving a 1dp line that follows the corners
+                // Uniform border on all four sides. Double width because the clip trims the outer half,
+                // leaving a line of edgeWidth that follows the corners
                 drawOutline(
                     outline = SupraShapes.control.createOutline(size, layoutDirection, this),
-                    color = box,
-                    style = Stroke(width = hairline * 2)
+                    color = edge,
+                    style = Stroke(width = edgeWidth.toPx() * 2)
                 )
-                drawRect(edge, size = Size(3.dp.toPx(), size.height))
             }
     ) {
         if (label != null || meta != null) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 15.dp, end = 12.dp, top = 10.dp, bottom = 6.dp),
+                    .padding(start = 12.dp, end = 12.dp, top = 10.dp, bottom = 6.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -124,7 +117,7 @@ fun SupraFullscreenTextField(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .padding(start = 15.dp, end = 12.dp, top = 2.dp, bottom = 12.dp)
+                .padding(start = 12.dp, end = 12.dp, top = 2.dp, bottom = 12.dp)
                 .onFocusChanged { focused = it.isFocused },
             value = value,
             onValueChange = onValueChange,
@@ -147,7 +140,7 @@ fun SupraFullscreenTextField(
         )
         action?.let {
             HorizontalDivider(color = Ink2)
-            Box(Modifier.padding(start = 11.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)) { it() }
+            Box(Modifier.padding(8.dp)) { it() }
         }
     }
 }
