@@ -71,17 +71,18 @@ fun darkenColor(color: Color, factor: Float): Color{
  * Material plate: one tinted texture mask, always. Get presence from [scale], [wear] and [misregister]
  * rather than stacking a second texture.
  *
- * - topo1/3/5 are the standard material; [TextureType.SLATE] is the quieter grain for rows.
+ * - topo1/3/5 are the standard material; [TextureType.SLATE] is the quieter grain. List rows are plain by default.
  * - Keep [wear] and [misregister] off in list rows; they are for standalone plates.
  * - No specular sweep and no fasteners: they read as anodised metal, which is not the Supra finish.
  *
+ * @param textureType The mask to print. Null gives a plain plate with no texture.
  * @param scale Blows the mask up past the plate.
  * @param misregister A second, offset print of the same mask: a registration error, not a glow.
  */
 @Composable
 fun SupraTextureCard(
     modifier: Modifier = Modifier,
-    textureType: TextureType = TextureType.TOPOGRAPHIC,
+    textureType: TextureType? = TextureType.TOPOGRAPHIC,
     backgroundColor: Color = Color(0xFF1B2329),
     tint: Color = Color(0xFF2A3841),
     scale: Float = 1f,
@@ -93,7 +94,7 @@ fun SupraTextureCard(
     content: @Composable BoxScope.() -> Unit
 ) {
     // Resolved once so a random topo pick stays stable, and the misregistered print reuses the same mask
-    val maskId = remember(textureType) { textureType.getTextureId() }
+    val maskId = remember(textureType) { textureType?.getTextureId() }
 
     Box(
         modifier = modifier
@@ -101,21 +102,23 @@ fun SupraTextureCard(
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(maskId),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(tint),
-            alpha = if (textureType == TextureType.SLATE) .9f else 1f,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .matchParentSize()
-                .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    rotationZ = if (flip) 180f else 0f
-                }
-        )
-        if (misregister) {
+        if (maskId != null) {
+            Image(
+                painter = painterResource(maskId),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(tint),
+                alpha = if (textureType == TextureType.SLATE) .9f else 1f,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        rotationZ = if (flip) 180f else 0f
+                    }
+            )
+        }
+        if (misregister && maskId != null) {
             Image(
                 painter = painterResource(maskId),
                 contentDescription = null,

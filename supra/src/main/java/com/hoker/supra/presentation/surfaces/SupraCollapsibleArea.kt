@@ -53,7 +53,7 @@ import com.hoker.supra.presentation.theme.Ink7
 import com.hoker.supra.presentation.theme.Motion
 
 /**
- * Groups related controls behind one header row. The header is a flat slate row at list weight (64dp), so
+ * Groups related controls behind one header row. The header is a plain row at list weight (64dp), so
  * collapsibles and [com.hoker.supra.presentation.list_items.SupraTextureListItem]s stack in one list.
  *
  * - The triangle is the only affordance: right when closed, rotated 90° down when open. No chevrons,
@@ -76,6 +76,7 @@ fun SupraCollapsibleArea(
     onToggle: ((Boolean) -> Unit)? = null,
     enabled: Boolean = true,
     headerHeight: Dp = Sizes.defaultListItemHeight,
+    headerTextureType: TextureType? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     var selfOpen by remember { mutableStateOf(initiallyOpen) }
@@ -116,7 +117,7 @@ fun SupraCollapsibleArea(
                     onToggle?.invoke(!isOpen)
                 }
                 .semantics { stateDescription = if (isOpen) "Expanded" else "Collapsed" },
-            textureType = TextureType.SLATE,
+            textureType = headerTextureType,
             backgroundColor = Ink3,
             shape = SupraShapes.row
         ) {

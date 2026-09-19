@@ -28,7 +28,8 @@ import com.hoker.supra.presentation.theme.Ink3
 import com.hoker.supra.presentation.theme.Ink5
 
 /**
- * Textured list row: flat material, row corners, a hairline box and an optional mono status.
+ * List row: a plain plate by default (pass [textureType] for a flat texture), row corners, a hairline box
+ * and an optional mono status.
  *
  * @param status Short mono status on the right. Use an em dash for "nothing to report", never "Inactive".
  * @param live Marks the row as live: a 2dp accent ring around the whole row, and an accent status. At most one per list.
@@ -41,7 +42,7 @@ fun SupraTextureListItem(
     rightIconId: Int? = null,
     leftIconImageVector: ImageVector? = null,
     rightIconImageVector: ImageVector? = null,
-    textureType: TextureType = TextureType.SLATE,
+    textureType: TextureType? = null,
     backgroundColor: Color = Ink3,
     status: String? = null,
     live: Boolean = false,
