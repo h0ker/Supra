@@ -30,13 +30,21 @@ import kotlin.random.Random
 enum class TextureType {
 
     SLATE,
-    TOPOGRAPHIC;
+
+    /** A random topographic mask. */
+    TOPOGRAPHIC,
+
+    /** Specific topographic masks. topo1, 3 and 5 are the standard material. */
+    TOPO1,
+    TOPO3,
+    TOPO5;
 
     fun getTextureId(): Int {
         return when(this) {
-            SLATE -> {
-                R.drawable.slate
-            }
+            SLATE -> R.drawable.slate
+            TOPO1 -> R.drawable.topo1
+            TOPO3 -> R.drawable.topo3
+            TOPO5 -> R.drawable.topo5
             TOPOGRAPHIC -> {
                 val imageIndex = Random.nextInt(1, 7)
                 when (imageIndex) {
@@ -52,30 +60,6 @@ enum class TextureType {
     }
 }
 
-/**
- * One printed layer of a material stack.
- */
-data class TextureLayer(
-    val texture: TextureType,
-    val tint: Color,
-    val alpha: Float = 1f,
-    val scale: Float = 1f,
-    val offset: Offset = Offset.Zero,
-    val flip: Boolean = false
-)
-
-/**
- * [HERO] surfaces get the full stack (layers, wear, misregistration). No specular sweep or fasteners:
- * those read as anodised metal, which is not the Supra finish.
- * List rows and repeated cards stay [FLAT]; a column of hero plates fights itself.
- */
-enum class MaterialStyle { FLAT, HERO }
-
-private val heroLayers = listOf(
-    TextureLayer(TextureType.SLATE, Color(0xFF3E5666), alpha = .85f),
-    TextureLayer(TextureType.TOPOGRAPHIC, Color(0xFF6E90A8), alpha = .55f, scale = 1.6f)
-)
-
 fun darkenColor(color: Color, factor: Float): Color{
     val red = (color.red * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
     val green = (color.green * 255 * (1 - factor)).coerceIn(0f, 255f).toInt()
@@ -84,33 +68,32 @@ fun darkenColor(color: Color, factor: Float): Color{
 }
 
 /**
- * @param textureType Texture for the single [MaterialStyle.FLAT] layer. Ignored when [layers] is set
- *                    or [material] is [MaterialStyle.HERO].
- * @param tint Tint for the single [MaterialStyle.FLAT] layer.
- * @param layers Explicit layer stack, drawn bottom to top. Overrides [material]'s default stack.
+ * Material plate: one tinted texture mask, always. Get presence from [scale], [wear] and [misregister]
+ * rather than stacking a second texture.
+ *
+ * - topo1/3/5 are the standard material; [TextureType.SLATE] is the quieter grain for rows.
+ * - Keep [wear] and [misregister] off in list rows; they are for standalone plates.
+ * - No specular sweep and no fasteners: they read as anodised metal, which is not the Supra finish.
+ *
+ * @param scale Blows the mask up past the plate.
+ * @param misregister A second, offset print of the same mask: a registration error, not a glow.
  */
 @Composable
 fun SupraTextureCard(
     modifier: Modifier = Modifier,
-    material: MaterialStyle = MaterialStyle.FLAT,
     textureType: TextureType = TextureType.TOPOGRAPHIC,
     backgroundColor: Color = Color(0xFF1B2329),
-    tint: Color = darkenColor(backgroundColor, .2f),
-    layers: List<TextureLayer>? = null,
+    tint: Color = Color(0xFF2A3841),
+    scale: Float = 1f,
+    flip: Boolean = false,
     shape: Shape = SupraShapes.material,
-    wear: Boolean = material == MaterialStyle.HERO,
-    misregister: Boolean = material == MaterialStyle.HERO,
+    wear: Boolean = false,
+    misregister: Boolean = false,
     misregisterColor: Color = ErrorRed,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val flatFlip = remember { Random.nextBoolean() }
-    val stack = layers ?: when (material) {
-        MaterialStyle.HERO -> heroLayers
-        MaterialStyle.FLAT -> listOf(TextureLayer(textureType, tint, flip = flatFlip))
-    }
-    // Resolve once so a random topo pick stays stable, and the misregistered
-    // plate reuses the exact image of the layer it is offset from.
-    val textureIds = remember(stack) { stack.map { it.texture.getTextureId() } }
+    // Resolved once so a random topo pick stays stable, and the misregistered print reuses the same mask
+    val maskId = remember(textureType) { textureType.getTextureId() }
 
     Box(
         modifier = modifier
@@ -118,28 +101,23 @@ fun SupraTextureCard(
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        stack.forEachIndexed { index, layer ->
+        Image(
+            painter = painterResource(maskId),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(tint),
+            alpha = if (textureType == TextureType.SLATE) .9f else 1f,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    rotationZ = if (flip) 180f else 0f
+                }
+        )
+        if (misregister) {
             Image(
-                painter = painterResource(textureIds[index]),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(layer.tint),
-                alpha = layer.alpha,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .matchParentSize()
-                    .graphicsLayer {
-                        scaleX = layer.scale
-                        scaleY = layer.scale
-                        rotationZ = if (layer.flip) 180f else 0f
-                        translationX = layer.offset.x
-                        translationY = layer.offset.y
-                    }
-            )
-        }
-        if (misregister && stack.isNotEmpty()) {
-            val top = stack.last()
-            Image(
-                painter = painterResource(textureIds.last()),
+                painter = painterResource(maskId),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(misregisterColor),
                 alpha = .32f,
@@ -147,11 +125,11 @@ fun SupraTextureCard(
                 modifier = Modifier
                     .matchParentSize()
                     .graphicsLayer {
-                        scaleX = top.scale
-                        scaleY = top.scale
-                        rotationZ = if (top.flip) 180f else 0f
-                        translationX = top.offset.x + 3.dp.toPx()
-                        translationY = top.offset.y + 2.dp.toPx()
+                        scaleX = scale
+                        scaleY = scale
+                        rotationZ = if (flip) 180f else 0f
+                        translationX = 3.dp.toPx()
+                        translationY = 2.dp.toPx()
                         blendMode = BlendMode.Screen
                     }
             )
@@ -186,4 +164,3 @@ fun SupraTextureCard(
         content()
     }
 }
-

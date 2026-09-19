@@ -7,53 +7,59 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.hoker.supra.presentation.cards.MaterialStyle
 import com.hoker.supra.presentation.cards.SupraTextureCard
-import com.hoker.supra.presentation.cards.TextureLayer
 import com.hoker.supra.presentation.cards.TextureType
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supraexample.presentation.components.ScreenColumn
 import com.hoker.supraexample.presentation.components.SpecimenLabel
 import com.hoker.supraexample.presentation.components.Wordmark
 
-// Material layer tints are part of the print, not UI state, so they stay literal
-private val customLayers = listOf(
-    TextureLayer(TextureType.TOPOGRAPHIC, Color(0xFF33505F), alpha = .8f),
-    TextureLayer(TextureType.TOPOGRAPHIC, Color(0xFF7EA0B4), alpha = .35f, scale = 2.1f)
-)
-
 @Composable
 fun MaterialScreen() {
     ScreenColumn {
+        SpecimenLabel(text = "One mask each · no stacks")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Sizes.small)
         ) {
-            Column(
+            MaterialSpecimen(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Sizes.small)
+                label = "Slate · row grain"
             ) {
                 SupraTextureCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp),
-                    material = MaterialStyle.FLAT
+                        .height(160.dp),
+                    textureType = TextureType.SLATE,
+                    shape = SupraShapes.row
                 ) {}
-                SpecimenLabel(text = "Flat · one layer")
             }
-            Column(
+            MaterialSpecimen(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Sizes.small)
+                label = "Topo3 · scale 1"
             ) {
                 SupraTextureCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp),
-                    material = MaterialStyle.HERO
+                        .height(160.dp),
+                    textureType = TextureType.TOPO3
                 ) {}
-                SpecimenLabel(text = "Hero · slate + topo + wear")
+            }
+            MaterialSpecimen(
+                modifier = Modifier.weight(1f),
+                label = "Topo3 · 1.6 · wear · misreg"
+            ) {
+                SupraTextureCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    textureType = TextureType.TOPO3,
+                    scale = 1.6f,
+                    wear = true,
+                    misregister = true
+                ) {}
             }
         }
 
@@ -61,19 +67,27 @@ fun MaterialScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            material = MaterialStyle.HERO
+            textureType = TextureType.TOPO3,
+            scale = 1.6f,
+            wear = true,
+            misregister = true
         ) {
-            Wordmark(sub = "Hero · misregistered print")
+            Wordmark(sub = "Topo3 · scale 1.6 · wear · misregistered print")
         }
+    }
+}
 
-        SupraTextureCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            layers = customLayers,
-            wear = true
-        ) {
-            Wordmark(sub = "Custom stack · two topo layers")
-        }
+@Composable
+private fun MaterialSpecimen(
+    modifier: Modifier = Modifier,
+    label: String,
+    plate: @Composable () -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(Sizes.small)
+    ) {
+        plate()
+        SpecimenLabel(text = label)
     }
 }

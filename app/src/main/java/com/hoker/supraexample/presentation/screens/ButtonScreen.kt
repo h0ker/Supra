@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hoker.supra.presentation.buttons.SupraButtonTone
 import com.hoker.supra.presentation.buttons.SupraHardwareButton
+import com.hoker.supra.presentation.buttons.SupraKeyedButton
 import com.hoker.supra.presentation.buttons.SupraOutlinedButton
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supraexample.presentation.components.ScreenColumn
@@ -84,6 +86,47 @@ fun ButtonScreen(
                 text = "Square size · original keycap · hardware moments only"
             )
         }
+
+        SpecimenLabel(text = "Keyed · flat · top-start cut · press is a tone shift only")
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Sizes.small),
+            verticalArrangement = Arrangement.spacedBy(Sizes.small)
+        ) {
+            SupraKeyedButton(
+                text = "Export",
+                tone = SupraButtonTone.NEUTRAL,
+                onClick = {}
+            )
+            SupraKeyedButton(
+                text = "Rename",
+                tone = SupraButtonTone.QUIET,
+                onClick = {}
+            )
+            SupraKeyedButton(
+                text = "Pair",
+                outlined = true,
+                onClick = {}
+            )
+            SupraKeyedButton(
+                text = "Wipe",
+                tone = SupraButtonTone.DANGER,
+                onClick = {}
+            )
+            SupraKeyedButton(
+                text = "Locked",
+                enabled = false,
+                onClick = {}
+            )
+        }
+        SupraKeyedButton(
+            text = "Duplicate slot",
+            icon = Icons.Filled.ContentCopy,
+            tone = SupraButtonTone.NEUTRAL,
+            outlined = true,
+            fullWidth = true,
+            onClick = {}
+        )
 
         SpecimenLabel(text = "Outlined · the quiet counterpart")
         SupraOutlinedButton(

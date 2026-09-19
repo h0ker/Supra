@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.hoker.supra.presentation.cards.MaterialStyle
 import com.hoker.supra.presentation.cards.SupraTextureCard
+import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.list_items.SupraTextureListItem
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraDataGutter
@@ -33,7 +33,10 @@ fun HomeScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            material = MaterialStyle.HERO
+            textureType = TextureType.TOPO3,
+            scale = 1.6f,
+            wear = true,
+            misregister = true
         ) {
             Wordmark(sub = "Design system · Rev $versionName")
         }

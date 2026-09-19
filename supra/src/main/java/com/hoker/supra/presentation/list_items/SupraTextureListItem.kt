@@ -19,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hoker.supra.presentation.cards.MaterialStyle
 import com.hoker.supra.presentation.cards.SupraTextureCard
 import com.hoker.supra.presentation.cards.TextureType
 import com.hoker.supra.presentation.shapes.SupraShapes
@@ -61,7 +60,6 @@ fun SupraTextureListItem(
                 color = if (live) MaterialTheme.colorScheme.secondary else Ink2,
                 shape = SupraShapes.row
             ),
-        material = MaterialStyle.FLAT,
         textureType = textureType,
         backgroundColor = backgroundColor,
         shape = SupraShapes.row
