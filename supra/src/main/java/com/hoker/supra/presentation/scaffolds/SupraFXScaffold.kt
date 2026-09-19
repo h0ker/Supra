@@ -202,17 +202,18 @@ fun SupraFXScaffold(
             }
             null -> { /* No background */ }
         }
+        // Bezel padding matches the bracket insets (4dp top; left, right and bottom derived from the display's
+        // corner radius), so the corner title, rail and content surface all sit inside the same box as the
+        // brackets, clear of rounded screen corners and cutouts.
+        val bezelPadding = rememberBracketInset()
         if (brackets) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.systemBars)
-                    .supraBrackets(MaterialTheme.colorScheme.secondary)
+                    .supraBrackets(MaterialTheme.colorScheme.secondary, inset = bezelPadding)
             )
         }
-        // Bezel padding matches the bracket insets (4dp top, 14dp elsewhere), so the corner title, rail and
-        // content surface all sit inside the same box as the brackets, clear of rounded screen corners and cutouts.
-        val bezelPadding = SupraChromeDefaults.BracketInset
         val bezelPaddingTop = SupraChromeDefaults.BracketInsetTop
         val cornerTitle = title ?: readout?.first
         val hasCorner = cornerTitle != null || readout?.second != null

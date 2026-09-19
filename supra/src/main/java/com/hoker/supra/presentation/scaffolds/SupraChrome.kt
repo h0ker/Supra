@@ -1,17 +1,21 @@
 package com.hoker.supra.presentation.scaffolds
 
+import android.view.RoundedCorner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
@@ -23,6 +27,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,14 +45,49 @@ object SupraChromeDefaults {
     /** The bracket's own bend, so the brackets sit in the rounded radius scale. */
     val BracketBend = 6.dp
 
-    /** Left, right and bottom inset. 14dp is the smallest value that clears a rounded device screen corner. */
-    val BracketInset = 14.dp
+    /**
+     * Floor for the left, right and bottom inset: flat-cornered devices keep this tight inset. The live
+     * value comes from [rememberBracketInset], which raises it to clear the display's corner radius.
+     */
+    val BracketInsetMin = 14.dp
 
     /** Top inset. Edge-to-edge layouts already get room from the status bar, so the top brackets hug it. */
     val BracketInsetTop = 4.dp
 
     /** Horizontal padding that keeps corner and rail content clear of the bracket arms. */
     val ReadoutGutter = BracketSize + 8.dp
+}
+
+/** 1 - 1/√2: how far in from a circular corner of radius R a square corner must sit to stay inside it. */
+private const val CORNER_CLEARANCE = 0.2929f
+
+/**
+ * The left, right and bottom bracket inset for this display: the smallest inset at which a bracket
+ * corner clears the display's rounded corner, plus 2dp so the stroke itself clears the curve, and never
+ * below [SupraChromeDefaults.BracketInsetMin]. A flat-cornered device stays at 14dp; a ~48px-radius
+ * phone lands around 16dp; very round displays get what they need, and only those devices pay for it.
+ *
+ * The top inset isn't derived: edge-to-edge content sits under the status bar, whose inset is always
+ * larger than the corner clearance. Drive the bezel content padding from the same value as the brackets,
+ * or the gutter between them collapses.
+ */
+@Composable
+fun rememberBracketInset(): Dp {
+    val view = LocalView.current
+    val density = LocalDensity.current
+    // Root insets arrive after the first frame; keying on the system bar inset re-reads them once they land
+    val systemBarsBottom = WindowInsets.systemBars.getBottom(density)
+    return remember(view, density, systemBarsBottom) {
+        val insets = view.rootWindowInsets
+        val radiusPx = listOf(
+            RoundedCorner.POSITION_BOTTOM_LEFT,
+            RoundedCorner.POSITION_BOTTOM_RIGHT,
+            RoundedCorner.POSITION_TOP_LEFT,
+            RoundedCorner.POSITION_TOP_RIGHT
+        ).maxOf { insets?.getRoundedCorner(it)?.radius ?: 0 }
+        val needed = with(density) { (radiusPx * CORNER_CLEARANCE).toDp() } + 2.dp
+        maxOf(SupraChromeDefaults.BracketInsetMin, needed)
+    }
 }
 
 /**
@@ -60,7 +101,7 @@ fun Modifier.supraBrackets(
     size: Dp = SupraChromeDefaults.BracketSize,
     weight: Dp = SupraChromeDefaults.BracketWeight,
     bend: Dp = SupraChromeDefaults.BracketBend,
-    inset: Dp = SupraChromeDefaults.BracketInset,
+    inset: Dp = SupraChromeDefaults.BracketInsetMin,
     insetTop: Dp = SupraChromeDefaults.BracketInsetTop
 ) = drawWithContent {
     drawContent()

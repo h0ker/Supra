@@ -10,7 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Nfc
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hoker.supra.presentation.buttons.SupraButtonTone
 import com.hoker.supra.presentation.buttons.SupraHardwareButton
+import com.hoker.supra.presentation.buttons.SupraIconButtonSizeLarge
 import com.hoker.supra.presentation.buttons.SupraKeyedButton
 import com.hoker.supra.presentation.buttons.SupraOutlinedButton
 import com.hoker.supra.presentation.sizes.Sizes
@@ -106,6 +109,28 @@ fun ButtonScreen(
             SupraHardwareButton(
                 text = "Details",
                 tone = SupraButtonTone.NEUTRAL,
+                onClick = {}
+            )
+        }
+
+        SpecimenLabel(text = "Icon only · large · 56 × 56 · glyph scales with the square")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Sizes.small)
+        ) {
+            SupraHardwareButton(
+                icon = Icons.Filled.QrCodeScanner,
+                contentDescription = "Scan QR code",
+                tone = SupraButtonTone.NEUTRAL,
+                size = SupraIconButtonSizeLarge,
+                onClick = {}
+            )
+            SupraHardwareButton(
+                icon = Icons.Filled.Settings,
+                contentDescription = "Settings",
+                tone = SupraButtonTone.QUIET,
+                size = SupraIconButtonSizeLarge,
                 onClick = {}
             )
         }

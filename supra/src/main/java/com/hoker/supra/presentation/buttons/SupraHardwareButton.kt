@@ -1,9 +1,13 @@
 package com.hoker.supra.presentation.buttons
 
+import android.os.SystemClock
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,16 +24,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.draw.innerShadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -37,7 +41,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
@@ -47,8 +50,17 @@ import com.hoker.supra.presentation.theme.Ink3
 import com.hoker.supra.presentation.theme.Ink4
 import com.hoker.supra.presentation.theme.Ink5
 import com.hoker.supra.utils.ColorUtils.inkOn
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class SupraButtonTone { ACCENT, NEUTRAL, QUIET, DANGER }
+
+/** Default square icon-only [SupraHardwareButton]. */
+val SupraIconButtonSize = 48.dp
+
+/** Roomier icon-only [SupraHardwareButton], for when 48dp reads too small. */
+val SupraIconButtonSizeLarge = 56.dp
 
 /**
  * The standard Supra button: a low cap on a plate, with the lip of the plate left visible.
@@ -99,7 +111,10 @@ fun SupraHardwareButton(
  *
  * - [contentDescription] is required: the glyph is the only content, and an unlabelled icon button is a
  *   TalkBack dead end.
- * - 48dp is the size and 44dp the floor. Don't go smaller to fit more of them in.
+ * - Two canonical sizes: [SupraIconButtonSize] (48dp, default) and [SupraIconButtonSizeLarge] (56dp) for
+ *   when 48 reads too small: a screen's single glyph action, a toolbar that should weigh more, gloved or
+ *   one-handed use. 44dp is the floor; past 56dp it reads as a tile, not a button. The glyph scales with
+ *   the square (46%), so both sizes keep the same optical weight.
  * - Use [SupraButtonTone.QUIET] or [SupraButtonTone.NEUTRAL] in groups; a row of accent icon buttons
  *   leaves no primary action.
  * - For a whole toolbar of controls use [SupraKeyedButton] instead. This is for one or two physical
@@ -113,8 +128,8 @@ fun SupraHardwareButton(
     tone: SupraButtonTone = SupraButtonTone.ACCENT,
     backgroundColor: Color? = null,
     iconColor: Color? = null,
-    size: Dp = 48.dp,
-    iconSize: Dp = 22.dp,
+    size: Dp = SupraIconButtonSize,
+    iconSize: Dp = size * 0.46f,
     lip: Dp = 5.dp,
     enabled: Boolean = true,
     onClick: () -> Unit
@@ -160,7 +175,7 @@ private fun HardwareButton(
 ) {
     val iconOnly = text == null
     val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
+    val depth = rememberCapDepth(interactionSource, enabled)
 
     val plate = when {
         !enabled -> Ink3
@@ -220,10 +235,10 @@ private fun HardwareButton(
                         else -> Modifier.fillMaxHeight().widthIn(min = 88.dp - lip * 2)
                     }
                 )
-                .capShadow(pressed = pressed && enabled, light = capLight)
+                .capShadow(depth = { depth.value }, light = capLight)
                 .clip(SupraShapes.cap)
                 .background(plate)
-                .capInnerShadow(pressed = pressed && enabled, light = capLight)
+                .capInnerShadow(depth = { depth.value }, light = capLight)
                 .padding(
                     horizontal = when {
                         iconOnly -> 0.dp
@@ -275,22 +290,95 @@ private fun capLightFor(plate: Color): Color {
     return Color.White.copy(alpha = alpha)
 }
 
-/** Resting cap: light up-left, dark down-right. Hidden on press, where the inner pair takes over. */
-private fun Modifier.capShadow(pressed: Boolean, light: Color): Modifier =
-    if (pressed) {
-        this
-    } else {
-        this
-            .dropShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = light, offset = DpOffset((-2).dp, (-2).dp)))
-            .dropShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = Color.Black.copy(alpha = .30f), offset = DpOffset(2.dp, 2.dp)))
-    }
+/** Cap travel into the plate on press. */
+private const val PRESS_IN_MS = 70
 
-/** Pressed cap: the same pair drawn inset. */
-private fun Modifier.capInnerShadow(pressed: Boolean, light: Color): Modifier =
-    if (pressed) {
-        this
-            .innerShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = light, offset = DpOffset((-2).dp, (-2).dp)))
-            .innerShadow(SupraShapes.cap, Shadow(radius = 5.dp, color = Color.Black.copy(alpha = .40f), offset = DpOffset(2.dp, 2.dp)))
-    } else {
-        this
+/** Minimum time the cap stays bottomed out, so even the quickest tap reads as a full keystroke. */
+private const val MIN_BOTTOM_MS = 60L
+
+/** Cap springing back out. Slower than the press, like a real key return. */
+private const val RELEASE_MS = 160
+
+/**
+ * Drives the cap's depth (0 = resting, 1 = fully pressed) from the button's press interactions.
+ *
+ * Quick taps inside scrollable containers deliver Press and Release in the same frame, so a plain
+ * pressed flag never renders. Here a release first lets the press-in finish and dwell for
+ * [MIN_BOTTOM_MS], then animates back out, so every tap plays a complete down-and-up cycle while a
+ * press-and-hold still stays down for as long as it's held.
+ */
+@Composable
+private fun rememberCapDepth(interactionSource: MutableInteractionSource, enabled: Boolean): Animatable<Float, *> {
+    val depth = remember { Animatable(0f) }
+    LaunchedEffect(interactionSource, enabled) {
+        if (!enabled) {
+            depth.snapTo(0f)
+            return@LaunchedEffect
+        }
+        var pressStart = 0L
+        var cycle: Job? = null
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    pressStart = SystemClock.uptimeMillis()
+                    cycle?.cancel()
+                    cycle = launch {
+                        depth.animateTo(1f, tween(PRESS_IN_MS, easing = FastOutSlowInEasing))
+                    }
+                }
+                is PressInteraction.Release -> {
+                    val pressIn = cycle
+                    cycle = launch {
+                        // Let the cap bottom out before it comes back up
+                        pressIn?.join()
+                        val bottomed = SystemClock.uptimeMillis() - pressStart - PRESS_IN_MS
+                        if (bottomed < MIN_BOTTOM_MS) delay(MIN_BOTTOM_MS - bottomed)
+                        depth.animateTo(0f, tween(RELEASE_MS, easing = FastOutSlowInEasing))
+                    }
+                }
+                is PressInteraction.Cancel -> {
+                    // The gesture became a scroll: return without forcing a keystroke
+                    cycle?.cancel()
+                    cycle = launch { depth.animateTo(0f, tween(RELEASE_MS, easing = FastOutSlowInEasing)) }
+                }
+            }
+        }
     }
+    return depth
+}
+
+/**
+ * Resting cap: light up-left, dark down-right. Fades out as [depth] rises while the inset pair in
+ * [capInnerShadow] fades in, so the cap appears to sink rather than switch. Both read [depth] in the
+ * draw phase, so the animation redraws the shadows without recomposing the button.
+ */
+private fun Modifier.capShadow(depth: () -> Float, light: Color): Modifier =
+    this
+        .dropShadow(SupraShapes.cap) {
+            radius = 4.dp.toPx()
+            color = light
+            offset = Offset((-2).dp.toPx(), (-2).dp.toPx())
+            alpha = 1f - depth()
+        }
+        .dropShadow(SupraShapes.cap) {
+            radius = 4.dp.toPx()
+            color = Color.Black.copy(alpha = .30f)
+            offset = Offset(2.dp.toPx(), 2.dp.toPx())
+            alpha = 1f - depth()
+        }
+
+/** Pressed cap: the same pair drawn inset, faded in by [depth]. */
+private fun Modifier.capInnerShadow(depth: () -> Float, light: Color): Modifier =
+    this
+        .innerShadow(SupraShapes.cap) {
+            radius = 4.dp.toPx()
+            color = light
+            offset = Offset((-2).dp.toPx(), (-2).dp.toPx())
+            alpha = depth()
+        }
+        .innerShadow(SupraShapes.cap) {
+            radius = 5.dp.toPx()
+            color = Color.Black.copy(alpha = .40f)
+            offset = Offset(2.dp.toPx(), 2.dp.toPx())
+            alpha = depth()
+        }
