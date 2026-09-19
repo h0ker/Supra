@@ -28,15 +28,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.draw.innerShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.theme.ErrorRed
 import com.hoker.supra.presentation.theme.Ink3
@@ -70,6 +74,91 @@ fun SupraHardwareButton(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    HardwareButton(
+        modifier = modifier,
+        text = text,
+        icon = icon,
+        iconSize = 20.dp,
+        contentDescription = null,
+        tone = tone,
+        backgroundColor = backgroundColor,
+        textColor = textColor,
+        height = height,
+        lip = lip,
+        squareSize = squareSize,
+        fullWidth = fullWidth,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+/**
+ * Icon-only [SupraHardwareButton]: a square the height of a standard button (48×48), glyph only, no
+ * label and no 88dp minimum. Lip, cap and press inversion match the labelled button, so the two sit in
+ * one row without reading as different controls.
+ *
+ * - [contentDescription] is required: the glyph is the only content, and an unlabelled icon button is a
+ *   TalkBack dead end.
+ * - 48dp is the size and 44dp the floor. Don't go smaller to fit more of them in.
+ * - Use [SupraButtonTone.QUIET] or [SupraButtonTone.NEUTRAL] in groups; a row of accent icon buttons
+ *   leaves no primary action.
+ * - For a whole toolbar of controls use [SupraKeyedButton] instead. This is for one or two physical
+ *   actions sitting next to content.
+ */
+@Composable
+fun SupraHardwareButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    contentDescription: String,
+    tone: SupraButtonTone = SupraButtonTone.ACCENT,
+    backgroundColor: Color? = null,
+    iconColor: Color? = null,
+    size: Dp = 48.dp,
+    iconSize: Dp = 22.dp,
+    lip: Dp = 5.dp,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    HardwareButton(
+        modifier = modifier,
+        text = null,
+        icon = icon,
+        iconSize = iconSize,
+        contentDescription = contentDescription,
+        tone = tone,
+        backgroundColor = backgroundColor,
+        textColor = iconColor,
+        height = size,
+        lip = lip,
+        squareSize = null,
+        fullWidth = false,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
+/**
+ * Shared body. A null [text] makes an icon-only button: a height × height square whose cap fills the
+ * plate like a labelled one (the [squareSize] keycap is the one that insets its cap).
+ */
+@Composable
+private fun HardwareButton(
+    modifier: Modifier,
+    text: String?,
+    icon: ImageVector?,
+    iconSize: Dp,
+    contentDescription: String?,
+    tone: SupraButtonTone,
+    backgroundColor: Color?,
+    textColor: Color?,
+    height: Dp,
+    lip: Dp,
+    squareSize: Dp?,
+    fullWidth: Boolean,
+    enabled: Boolean,
+    onClick: () -> Unit
+) {
+    val iconOnly = text == null
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
 
@@ -89,12 +178,14 @@ fun SupraHardwareButton(
         else -> plate.inkOn()
     }
     val square = squareSize != null
+    val capLight = remember(plate) { capLightFor(plate) }
 
     Box(
         modifier = modifier
             .then(
                 when {
                     square -> Modifier.size(squareSize)
+                    iconOnly -> Modifier.size(height.coerceAtLeast(44.dp))
                     fullWidth -> Modifier.fillMaxWidth().height(height.coerceAtLeast(44.dp))
                     else -> Modifier.widthIn(min = 88.dp).height(height.coerceAtLeast(44.dp))
                 }
@@ -108,6 +199,13 @@ fun SupraHardwareButton(
                 role = Role.Button,
                 onClick = onClick
             )
+            .then(
+                if (contentDescription != null) {
+                    Modifier.semantics { this.contentDescription = contentDescription }
+                } else {
+                    Modifier
+                }
+            )
             .padding(lip),
         contentAlignment = Alignment.Center
     ) {
@@ -116,60 +214,82 @@ fun SupraHardwareButton(
                 .then(
                     when {
                         square -> Modifier.fillMaxSize(.86f)
-                        fullWidth -> Modifier.fillMaxSize()
+                        // An icon button's cap fills the plate like a labelled one
+                        fullWidth || iconOnly -> Modifier.fillMaxSize()
                         // Wrap the label, but never narrower than the plate's 88dp minimum
                         else -> Modifier.fillMaxHeight().widthIn(min = 88.dp - lip * 2)
                     }
                 )
-                .capShadow(pressed = pressed && enabled)
+                .capShadow(pressed = pressed && enabled, light = capLight)
                 .clip(SupraShapes.cap)
                 .background(plate)
-                .capInnerShadow(pressed = pressed && enabled)
-                .padding(horizontal = if (square) 4.dp else 16.dp),
+                .capInnerShadow(pressed = pressed && enabled, light = capLight)
+                .padding(
+                    horizontal = when {
+                        iconOnly -> 0.dp
+                        square -> 4.dp
+                        else -> 16.dp
+                    }
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             icon?.let {
                 Icon(
-                    modifier = Modifier.size(20.dp),
+                    modifier = Modifier.size(iconSize),
                     imageVector = it,
                     contentDescription = null,
                     tint = label
                 )
-                Spacer(Modifier.width(8.dp))
+                if (!iconOnly) Spacer(Modifier.width(8.dp))
             }
-            Text(
-                text = text.uppercase(),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
-                    letterSpacing = 1.2.sp
-                ),
-                color = label,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            text?.let {
+                Text(
+                    text = it.uppercase(),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        letterSpacing = 1.2.sp
+                    ),
+                    color = label,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
 
-private val capLight = Color.White.copy(alpha = .18f)
+private const val CAP_LIGHT_MIN_ALPHA = .06f
+private const val CAP_LIGHT_MAX_ALPHA = .18f
+
+/**
+ * The up-left highlight, scaled by the plate's perceptual lightness (CIE L*). A fixed white overlay
+ * reads as a strong glint on near-black plates and barely registers on bright ones, so dark plates get
+ * a softer light and bright plates keep the full 18%.
+ */
+private fun capLightFor(plate: Color): Color {
+    val y = plate.luminance()
+    val lStar = if (y > 0.008856f) 116f * Math.cbrt(y.toDouble()).toFloat() - 16f else 903.3f * y
+    val alpha = lerp(CAP_LIGHT_MIN_ALPHA, CAP_LIGHT_MAX_ALPHA, (lStar / 100f).coerceIn(0f, 1f))
+    return Color.White.copy(alpha = alpha)
+}
 
 /** Resting cap: light up-left, dark down-right. Hidden on press, where the inner pair takes over. */
-private fun Modifier.capShadow(pressed: Boolean): Modifier =
+private fun Modifier.capShadow(pressed: Boolean, light: Color): Modifier =
     if (pressed) {
         this
     } else {
         this
-            .dropShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = capLight, offset = DpOffset((-2).dp, (-2).dp)))
+            .dropShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = light, offset = DpOffset((-2).dp, (-2).dp)))
             .dropShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = Color.Black.copy(alpha = .30f), offset = DpOffset(2.dp, 2.dp)))
     }
 
 /** Pressed cap: the same pair drawn inset. */
-private fun Modifier.capInnerShadow(pressed: Boolean): Modifier =
+private fun Modifier.capInnerShadow(pressed: Boolean, light: Color): Modifier =
     if (pressed) {
         this
-            .innerShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = capLight, offset = DpOffset((-2).dp, (-2).dp)))
+            .innerShadow(SupraShapes.cap, Shadow(radius = 4.dp, color = light, offset = DpOffset((-2).dp, (-2).dp)))
             .innerShadow(SupraShapes.cap, Shadow(radius = 5.dp, color = Color.Black.copy(alpha = .40f), offset = DpOffset(2.dp, 2.dp)))
     } else {
         this

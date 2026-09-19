@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Nfc
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,6 +69,43 @@ fun ButtonScreen(
             SupraHardwareButton(
                 text = "Locked",
                 enabled = false,
+                onClick = {}
+            )
+        }
+
+        SpecimenLabel(text = "Icon only · 48 × 48 · same lip and press as a labelled button")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Sizes.small)
+        ) {
+            SupraHardwareButton(
+                icon = Icons.Filled.Refresh,
+                contentDescription = "Rescan tag",
+                tone = SupraButtonTone.NEUTRAL,
+                onClick = {}
+            )
+            SupraHardwareButton(
+                icon = Icons.Filled.ContentCopy,
+                contentDescription = "Copy key",
+                tone = SupraButtonTone.QUIET,
+                onClick = {}
+            )
+            SupraHardwareButton(
+                icon = Icons.Filled.Share,
+                contentDescription = "Share key",
+                tone = SupraButtonTone.QUIET,
+                onClick = {}
+            )
+            SupraHardwareButton(
+                icon = Icons.Filled.Lock,
+                contentDescription = "Lock",
+                enabled = false,
+                onClick = {}
+            )
+            SupraHardwareButton(
+                text = "Details",
+                tone = SupraButtonTone.NEUTRAL,
                 onClick = {}
             )
         }
