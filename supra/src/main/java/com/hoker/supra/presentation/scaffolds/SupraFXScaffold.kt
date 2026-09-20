@@ -202,16 +202,19 @@ fun SupraFXScaffold(
             }
             null -> { /* No background */ }
         }
-        // Bezel padding matches the bracket insets (4dp top; left, right and bottom derived from the display's
-        // corner radius), so the corner title, rail and content surface all sit inside the same box as the
-        // brackets, clear of rounded screen corners and cutouts.
-        val bezelPadding = rememberBracketInset()
+        // Bezel padding matches the bracket insets, so the corner title, rail and content surface all sit
+        // inside the same box as the brackets. Only the bottom is derived, from the display's corner radius.
+        val bezelPadding = SupraChromeDefaults.BracketInset
+        val bezelPaddingBottom = rememberBracketInsetBottom()
         if (brackets) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.systemBars)
-                    .supraBrackets(MaterialTheme.colorScheme.secondary, inset = bezelPadding)
+                    .supraBrackets(
+                        color = MaterialTheme.colorScheme.secondary,
+                        insetBottom = bezelPaddingBottom
+                    )
             )
         }
         val bezelPaddingTop = SupraChromeDefaults.BracketInsetTop
@@ -270,7 +273,7 @@ fun SupraFXScaffold(
                         }
                         Spacer(
                             Modifier
-                                .padding(top = bezelPadding)
+                                .padding(top = bezelPaddingBottom)
                                 .windowInsetsBottomHeight(WindowInsets.systemBars)
                         )
                     }
@@ -291,7 +294,7 @@ fun SupraFXScaffold(
                         bottom = when {
                             rail -> 0.dp // the rail, and a bottom bar above it, carry their own 8dp top padding
                             bottomBar != null -> 8.dp
-                            else -> bezelPadding
+                            else -> bezelPaddingBottom
                         }
                     )
                     .padding(paddingValues)

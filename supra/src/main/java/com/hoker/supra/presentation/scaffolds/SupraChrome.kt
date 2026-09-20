@@ -37,6 +37,7 @@ import com.hoker.supra.presentation.theme.Ink4
 import com.hoker.supra.presentation.theme.Ink5
 import com.hoker.supra.presentation.theme.Ink7
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 object SupraChromeDefaults {
     val BracketSize = 16.dp
@@ -45,11 +46,8 @@ object SupraChromeDefaults {
     /** The bracket's own bend, so the brackets sit in the rounded radius scale. */
     val BracketBend = 6.dp
 
-    /**
-     * Floor for the left, right and bottom inset: flat-cornered devices keep this tight inset. The live
-     * value comes from [rememberBracketInset], which raises it to clear the display's corner radius.
-     */
-    val BracketInsetMin = 14.dp
+    /** Left and right inset. Constant, never derived. Also the floor for the bottom inset. */
+    val BracketInset = 14.dp
 
     /** Top inset. Edge-to-edge layouts already get room from the status bar, so the top brackets hug it. */
     val BracketInsetTop = 4.dp
@@ -58,35 +56,35 @@ object SupraChromeDefaults {
     val ReadoutGutter = BracketSize + 8.dp
 }
 
-/** 1 - 1/√2: how far in from a circular corner of radius R a square corner must sit to stay inside it. */
-private const val CORNER_CLEARANCE = 0.2929f
+/** Extra room so the 2dp stroke itself clears the display's curve, not just the bracket's corner point. */
+private val StrokeClearance = 3.dp
 
 /**
- * The left, right and bottom bracket inset for this display: the smallest inset at which a bracket
- * corner clears the display's rounded corner, plus 2dp so the stroke itself clears the curve, and never
- * below [SupraChromeDefaults.BracketInsetMin]. A flat-cornered device stays at 14dp; a ~48px-radius
- * phone lands around 16dp; very round displays get what they need, and only those devices pay for it.
+ * The bottom inset at which a bracket corner sitting [inset] from the side clears a round display corner.
  *
- * The top inset isn't derived: edge-to-edge content sits under the status bar, whose inset is always
- * larger than the corner clearance. Drive the bezel content padding from the same value as the brackets,
- * or the gutter between them collapses.
+ * The bracket shape and the horizontal inset never change: only the bottom gives. With the sides pinned at
+ * `d`, a corner at `(d, y)` from the display corner is inside the glass when `(R - d)² + (R - y)² ≤ R²`,
+ * so `y ≥ R - √(R² - (R - d)²)`. Floored at [inset], so a flat-cornered device keeps the tight bottom.
+ *
+ * Drive the bezel's bottom padding from this too, or the content stays put while the brackets move down
+ * and the gutter between them collapses.
  */
 @Composable
-fun rememberBracketInset(): Dp {
+fun rememberBracketInsetBottom(inset: Dp = SupraChromeDefaults.BracketInset): Dp {
     val view = LocalView.current
     val density = LocalDensity.current
     // Root insets arrive after the first frame; keying on the system bar inset re-reads them once they land
     val systemBarsBottom = WindowInsets.systemBars.getBottom(density)
-    return remember(view, density, systemBarsBottom) {
+    return remember(view, density, inset, systemBarsBottom) {
         val insets = view.rootWindowInsets
         val radiusPx = listOf(
             RoundedCorner.POSITION_BOTTOM_LEFT,
-            RoundedCorner.POSITION_BOTTOM_RIGHT,
-            RoundedCorner.POSITION_TOP_LEFT,
-            RoundedCorner.POSITION_TOP_RIGHT
+            RoundedCorner.POSITION_BOTTOM_RIGHT
         ).maxOf { insets?.getRoundedCorner(it)?.radius ?: 0 }
-        val needed = with(density) { (radiusPx * CORNER_CLEARANCE).toDp() } + 2.dp
-        maxOf(SupraChromeDefaults.BracketInsetMin, needed)
+        val r = with(density) { radiusPx.toDp() }
+        val k = (r - inset).coerceAtLeast(0.dp)
+        val inner = sqrt((r.value * r.value - k.value * k.value).coerceAtLeast(0f)).dp
+        maxOf(inset, r - inner + StrokeClearance)
     }
 }
 
@@ -95,14 +93,17 @@ fun rememberBracketInset(): Dp {
  * furniture, so they are one of the few places the accent is allowed.
  *
  * @param bend Radius of the quarter-arc joining the two arms. Square brackets read as a leftover hard corner.
+ * @param inset Left and right inset. Constant on every device.
+ * @param insetBottom Bottom inset, from [rememberBracketInsetBottom] on displays with round corners.
  */
 fun Modifier.supraBrackets(
     color: Color,
     size: Dp = SupraChromeDefaults.BracketSize,
     weight: Dp = SupraChromeDefaults.BracketWeight,
     bend: Dp = SupraChromeDefaults.BracketBend,
-    inset: Dp = SupraChromeDefaults.BracketInsetMin,
-    insetTop: Dp = SupraChromeDefaults.BracketInsetTop
+    inset: Dp = SupraChromeDefaults.BracketInset,
+    insetTop: Dp = SupraChromeDefaults.BracketInsetTop,
+    insetBottom: Dp = SupraChromeDefaults.BracketInset
 ) = drawWithContent {
     drawContent()
     val s = size.toPx()
@@ -112,7 +113,7 @@ fun Modifier.supraBrackets(
     val left = inset.toPx() + w / 2f
     val top = insetTop.toPx() + w / 2f
     val right = this.size.width - left
-    val bottom = this.size.height - left
+    val bottom = this.size.height - (insetBottom.toPx() + w / 2f)
     val stroke = Stroke(width = w, cap = StrokeCap.Round, join = StrokeJoin.Round)
     listOf(
         Offset(left, top) to Offset(1f, 1f),
