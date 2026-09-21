@@ -55,6 +55,7 @@ import com.hoker.supraexample.presentation.screens.IndicatorScreen
 import com.hoker.supraexample.presentation.screens.ListItemScreen
 import com.hoker.supraexample.presentation.screens.MaterialScreen
 import com.hoker.supraexample.presentation.screens.PickersScreen
+import com.hoker.supraexample.presentation.screens.ScanScreen
 import com.hoker.supraexample.presentation.screens.QrScannerScreen
 import com.hoker.supraexample.presentation.screens.SnackbarScreen
 import com.hoker.supraexample.presentation.screens.SupraFXScreen
@@ -204,6 +205,10 @@ class MainActivity : ComponentActivity() {
                         composable(NavRoute.IndicatorScreen.route) {
                             currentRoute = NavRoute.IndicatorScreen
                             IndicatorScreen()
+                        }
+                        composable(NavRoute.ScanScreen.route) {
+                            currentRoute = NavRoute.ScanScreen
+                            ScanScreen()
                         }
                         composable(NavRoute.SupraFXScreen.route) {
                             currentRoute = NavRoute.SupraFXScreen

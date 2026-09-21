@@ -12,6 +12,7 @@ sealed class NavRoute(val route: String, val pageTitle: String) {
     data object DialogScreen: NavRoute("dialog_screen", "Dialogs")
     data object SnackbarScreen: NavRoute("snackbar_screen", "Snackbars")
     data object IndicatorScreen: NavRoute("indicator_screen", "Indicators")
+    data object ScanScreen: NavRoute("scan_screen", "Scan")
     data object SupraFXScreen: NavRoute("suprafx_screen", "SupraFX")
     data object ChromeScreen: NavRoute("chrome_screen", "Chrome")
     data object ColorScreen: NavRoute("color_screen", "Colors")
@@ -30,6 +31,7 @@ sealed class NavRoute(val route: String, val pageTitle: String) {
             DialogScreen,
             SnackbarScreen,
             IndicatorScreen,
+            ScanScreen,
             SupraFXScreen,
             ChromeScreen,
             ColorScreen,
