@@ -82,7 +82,7 @@ fun SupraFullscreenTextField(
                 // Uniform border on all four sides. Double width because the clip trims the outer half,
                 // leaving a line of edgeWidth that follows the corners
                 drawOutline(
-                    outline = SupraShapes.control.createOutline(size, layoutDirection, this),
+                    outline = SupraShapes.material.createOutline(size, layoutDirection, this),
                     color = edge,
                     style = Stroke(width = edgeWidth.toPx() * 2)
                 )
