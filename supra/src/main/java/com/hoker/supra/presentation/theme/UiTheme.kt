@@ -12,8 +12,8 @@ enum class UiTheme(
     val title: String,
     val accent: Color
 ) {
-    LIVE("Live Yellow", AccentLive),
     BLUE("Blue", AccentBlue),
+    LIVE("Live Yellow", AccentLive),
     HI_VIS("Hi-Vis", AccentHiVis),
     BRASS("Brass", AccentBrass);
 
@@ -33,7 +33,7 @@ enum class UiTheme(
 
     companion object {
         fun fromTitle(title: String?): UiTheme {
-            return entries.firstOrNull { it.title == title } ?: LIVE
+            return entries.firstOrNull { it.title == title } ?: BLUE
         }
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hoker.supra.presentation.theme.DataBlue
 import kotlin.math.ceil
 
 /** How long each ring of dots holds before the next one prints. Sets the speed of the sweep. */
@@ -47,8 +46,8 @@ val SupraDefaultCoilY = 34.dp
  * time. It reads as ink and screen tone rather than light, so there is no glow, blur or easing in it.
  * Purely decorative; mount it *below* the content layer.
  *
- * - Dots are the machine-readout colour, the coil mark is state. If the mark needs to be the loud one,
- *   drop the dots to Ink5 rather than raising the mark.
+ * - Dots and coil mark both follow the theme accent, so the field swaps with the theme. Pass
+ *   `dotColor = DataBlue` for the machine-readout reading, or Ink5 to make the mark the loud one.
  * - Don't smooth the stepping, and don't raise the alpha, dot size or density: they all spend the same
  *   contrast budget the headline over it depends on.
  * - Keep titles and annotation clear of the lower half. The field occupies all of it, and it clips at
@@ -65,7 +64,7 @@ fun SupraFieldHalftone(
     modifier: Modifier = Modifier,
     active: Boolean = true,
     coilY: Dp = SupraDefaultCoilY,
-    dotColor: Color = DataBlue,
+    dotColor: Color = MaterialTheme.colorScheme.secondary,
     markColor: Color = MaterialTheme.colorScheme.secondary
 ) {
     // Stepped, not smooth: the whole read depends on this being discrete. Animating an Int also means the

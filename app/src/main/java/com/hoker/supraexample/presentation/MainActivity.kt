@@ -86,11 +86,11 @@ class MainActivity : ComponentActivity() {
             val mainViewModel: MainViewModel = hiltViewModel()
 
             val isDarkModeEnabled = mainViewModel.isDarkModeEnabled.collectAsState()
-            var uiThemeSelection by remember { mutableStateOf(UiTheme.fromTitle(sharedPreferences.getString(Consts.SETTINGS_SELECTED_UI_THEME, UiTheme.LIVE.title))) }
+            var uiThemeSelection by remember { mutableStateOf(UiTheme.fromTitle(sharedPreferences.getString(Consts.SETTINGS_SELECTED_UI_THEME, UiTheme.BLUE.title))) }
 
             sharedPreferences.registerOnSharedPreferenceChangeListener { pref, key ->
                 if (key == Consts.SETTINGS_SELECTED_UI_THEME) {
-                    uiThemeSelection = UiTheme.fromTitle(pref.getString(key, UiTheme.LIVE.title))
+                    uiThemeSelection = UiTheme.fromTitle(pref.getString(key, UiTheme.BLUE.title))
                     glitchKey = Random.nextInt()
                 }
             }

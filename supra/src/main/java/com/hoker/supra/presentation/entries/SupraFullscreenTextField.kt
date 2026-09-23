@@ -75,7 +75,7 @@ fun SupraFullscreenTextField(
         modifier = modifier
             .fillMaxSize()
             .alpha(if (enabled) 1f else .38f)
-            .clip(SupraShapes.control)
+            .clip(SupraShapes.material)
             .background(Ink3)
             .drawWithContent {
                 drawContent()

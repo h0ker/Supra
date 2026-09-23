@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = UiTheme.LIVE.colorScheme
+private val DarkColorScheme = UiTheme.BLUE.colorScheme
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryLight,

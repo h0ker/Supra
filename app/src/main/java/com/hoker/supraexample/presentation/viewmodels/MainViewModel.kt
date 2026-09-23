@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val _isDarkModeEnabled: MutableStateFlow<Boolean> = MutableStateFlow(sharedPreferences.getBoolean(Consts.DARK_MODE_ENABLED, false))
     val isDarkModeEnabled = _isDarkModeEnabled.asStateFlow()
 
-    val uiThemeSettingState = UiTheme.fromTitle(sharedPreferences.getString(Consts.SETTINGS_SELECTED_UI_THEME, UiTheme.LIVE.title))
+    val uiThemeSettingState = UiTheme.fromTitle(sharedPreferences.getString(Consts.SETTINGS_SELECTED_UI_THEME, UiTheme.BLUE.title))
 
     fun toggleDarkMode() {
         with(sharedPreferences.edit()) {
