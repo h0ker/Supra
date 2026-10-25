@@ -82,10 +82,12 @@ fun SupraFXScaffold(
 
     //Gyro effect
     val translationData by viewModel.translationData.collectAsState()
+    val gyroEnabled by viewModel.supraFX.isGyroEnabled.collectAsState()
     val xOffset = translationData.second
     val yOffset = translationData.first
-    val animatedXOffset = animateDpAsState(targetValue = xOffset.dp, label = "")
-    val animatedYOffset = animateDpAsState(targetValue = yOffset.dp, label = "")
+    // Turning it off animates the content back to centre rather than snapping it there
+    val animatedXOffset = animateDpAsState(targetValue = if (gyroEnabled) xOffset.dp else 0.dp, label = "gyroX")
+    val animatedYOffset = animateDpAsState(targetValue = if (gyroEnabled) yOffset.dp else 0.dp, label = "gyroY")
 
     //Pulse effect
     var currentEffect by remember { mutableStateOf<Color?>(null) }

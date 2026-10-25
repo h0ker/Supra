@@ -27,6 +27,7 @@ fun SupraFXScreen(
 
     val isAudioEnabled = viewModel.supraFX.isAudioEnabled.collectAsState()
     val isVibrationEnabled = viewModel.supraFX.isVibrationEnabled.collectAsState()
+    val isGyroEnabled = viewModel.supraFX.isGyroEnabled.collectAsState()
 
     ScreenColumn {
         SpecimenLabel(text = "Pulse · sound · haptics")
@@ -68,6 +69,14 @@ fun SupraFXScreen(
             selectedOption = SettingsBooleanState.fromBoolean(isVibrationEnabled.value).displayName,
             onOptionSelect = { option ->
                 viewModel.supraFX.setVibrationSettingState(option == SettingsBooleanState.ENABLED.displayName)
+            }
+        )
+        SettingRow(
+            label = "Gyro effect",
+            options = SettingsBooleanState.entries.map { it.displayName },
+            selectedOption = SettingsBooleanState.fromBoolean(isGyroEnabled.value).displayName,
+            onOptionSelect = { option ->
+                viewModel.supraFX.setGyroSettingState(option == SettingsBooleanState.ENABLED.displayName)
             }
         )
 

@@ -69,6 +69,11 @@ class SupraFX @Inject constructor(
     private val _isVibrationEnabled = MutableStateFlow(sharedPreferences.getBoolean(Consts.SETTINGS_VIBRATION_ENABLED, true))
     val isVibrationEnabled = _isVibrationEnabled.asStateFlow()
 
+    private val _isGyroEnabled = MutableStateFlow(sharedPreferences.getBoolean(Consts.SETTINGS_GYRO_ENABLED, true))
+
+    /** Whether the scaffold's content surface shifts with the gyroscope. Persisted in the Supra shared prefs. */
+    val isGyroEnabled = _isGyroEnabled.asStateFlow()
+
     private val _magneticInterference = MutableStateFlow(0f)
     val magneticInterference = _magneticInterference.asStateFlow()
 
@@ -116,6 +121,13 @@ class SupraFX @Inject constructor(
             apply()
         }
         _isVibrationEnabled.value = enabled
+    }
+
+    fun setGyroSettingState(enabled: Boolean) {
+        sharedPreferences.edit {
+            putBoolean(Consts.SETTINGS_GYRO_ENABLED, enabled)
+        }
+        _isGyroEnabled.value = enabled
     }
 
     fun firePulse(color: Color) {
