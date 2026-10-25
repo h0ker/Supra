@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.hoker.supra"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 31
@@ -26,16 +26,20 @@ android {
             )
         }
     }
+
     buildFeatures {
         compose = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 }
 
@@ -52,7 +56,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -76,7 +79,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.h0ker"
                 artifactId = "Supra"
-                version = "0.2.7"
+                version = "0.3.14"
             }
         }
     }

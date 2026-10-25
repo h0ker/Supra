@@ -3,31 +3,26 @@ package com.hoker.supra.presentation.qr_scanner
 import android.Manifest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.hoker.supra.presentation.buttons.SupraButtonTone
+import com.hoker.supra.presentation.buttons.SupraHardwareButton
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextMedium
 import com.hoker.supra.presentation.text.SupraBodyTextSmall
@@ -77,7 +72,8 @@ fun QrScannerDialog(
                             modifier = Modifier
                                 .padding(Sizes.medium)
                                 .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(Sizes.medium)
                         ) {
                             QrScanner(
                                 modifier = Modifier
@@ -90,39 +86,19 @@ fun QrScannerDialog(
                                 }
                             )
                             onHelpButtonClicked?.let { onHelpClicked ->
-                                Button(
-                                    modifier = Modifier
-                                        .padding(top = Sizes.medium)
-                                        .fillMaxWidth(),
-                                    onClick = {
-                                        onHelpClicked()
-                                    },
-                                ) {
-                                    Card(
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.primary
-                                        )
-                                    ) {
-                                        SupraBodyTextMedium(
-                                            text = "Help"
-                                        )
-                                    }
-                                }
+                                SupraHardwareButton(
+                                    text = "Help",
+                                    tone = SupraButtonTone.QUIET,
+                                    fullWidth = true,
+                                    onClick = onHelpClicked
+                                )
                             }
-                            Button(
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = onDismissRequest,
-                            ) {
-                                Card(
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    SupraBodyTextMedium(
-                                        text = "Close"
-                                    )
-                                }
-                            }
+                            SupraHardwareButton(
+                                text = "Close",
+                                tone = SupraButtonTone.NEUTRAL,
+                                fullWidth = true,
+                                onClick = onDismissRequest
+                            )
                         }
                     }
                 }
@@ -147,20 +123,21 @@ fun PermissionRationale(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Sizes.medium),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Sizes.medium)
     ) {
         SupraTitleTextMedium(
             text = title,
             textAlignment = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(8.dp))
         SupraBodyTextSmall(
             text = text,
             textAlignment = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRequestPermission) {
-            Text("Grant Permission")
-        }
+        SupraHardwareButton(
+            text = "Grant permission",
+            fullWidth = true,
+            onClick = onRequestPermission
+        )
     }
 }

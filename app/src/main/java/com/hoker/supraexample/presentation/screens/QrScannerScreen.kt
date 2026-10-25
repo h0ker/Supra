@@ -1,13 +1,11 @@
 package com.hoker.supraexample.presentation.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,16 +13,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.hoker.supra.presentation.buttons.SupraHardwareButton
 import com.hoker.supra.presentation.qr_scanner.QrScannerDialog
 import com.hoker.supra.presentation.sizes.Sizes
-import com.hoker.supra.presentation.text.SupraBodyTextMedium
-import com.hoker.supra.presentation.text.SupraTitleTextSmall
+import com.hoker.supra.presentation.theme.DataBlue
+import com.hoker.supraexample.presentation.components.ScreenColumn
+import com.hoker.supraexample.presentation.components.SpecimenLabel
 
 @Composable
 fun QrScannerScreen() {
 
     var showQrScanner by remember { mutableStateOf(false) }
-    var qrScanContent by remember { mutableStateOf("") }
+    var qrScanContent by remember { mutableStateOf<String?>(null) }
 
     QrScannerScreenContent(
         showQrScanner = showQrScanner,
@@ -48,26 +48,21 @@ fun QrScannerScreenContent(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .padding(Sizes.medium)
-                .fillMaxSize()
-        ) {
-            Button(
+        ScreenColumn(spacing = Sizes.small) {
+            SupraHardwareButton(
+                text = "Scan QR code",
+                icon = Icons.Filled.QrCodeScanner,
+                fullWidth = true,
                 onClick = {
                     onQrScannerVisibilityChanged(true)
                 }
-            ) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    SupraTitleTextSmall(text = "Show Qr Scanner")
-                }
-            }
-            SupraTitleTextSmall(text = "Qr Scan Content:")
-            SupraBodyTextMedium(text = qrScanContent ?: "")
+            )
+            SpecimenLabel(text = "QR scan content")
+            Text(
+                text = qrScanContent?.takeIf { it.isNotEmpty() } ?: "—",
+                style = MaterialTheme.typography.labelMedium,
+                color = DataBlue
+            )
         }
         QrScannerDialog(
             visible = showQrScanner,
@@ -84,7 +79,7 @@ fun QrScannerScreenContent(
 fun QrScannerScreenPreview() {
     QrScannerScreenContent(
         showQrScanner = false,
-        qrScanContent = "Example",
+        qrScanContent = "vivokey://spark2/04A29F3C1180",
         onQrScannerVisibilityChanged = {},
         onQrCodeDiscovered = {}
     )

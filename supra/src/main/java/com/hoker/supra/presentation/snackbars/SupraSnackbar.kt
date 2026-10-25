@@ -7,7 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.sizes.Sizes
 import com.hoker.supra.presentation.text.SupraBodyTextSmall
 import kotlin.apply
@@ -34,11 +35,11 @@ fun SupraSnackbar(
     message: String,
     durationMillis: Long = 3000L,
     onDismiss: () -> Unit,
-    borderColor: Color,
-    backgroundColor: Color,
-    contentColor: Color,
+    borderColor: Color = MaterialTheme.colorScheme.secondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     borderStrokeWidth: Dp = 4.dp,
-    shape: Shape = RoundedCornerShape(8.dp)
+    shape: Shape = SupraShapes.control
 ) {
     val progress = remember { Animatable(1f) }
 

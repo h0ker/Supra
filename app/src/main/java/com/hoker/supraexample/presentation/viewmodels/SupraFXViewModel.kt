@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.hoker.supra.domain.OverlayState
 import com.hoker.supra.presentation.fx.SupraFX
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,16 +16,25 @@ class SupraFXViewModel @Inject constructor(
     val supraFX: SupraFX
 ) : ViewModel() {
 
-    fun startIndeterminateLoading5Sec() {
-        viewModelScope.launch {
-            supraFX.setLoadingState(OverlayState.LOADING_INDETERMINATE)
-            delay(5000)
-            supraFX.setLoadingState(OverlayState.INACTIVE)
+    private var overlayJob: Job? = null
+
+    /**
+     * Shows [state] and clears it after [durationMillis], unless it was dismissed or replaced first.
+     */
+    fun showOverlay(state: OverlayState, durationMillis: Long = 5000) {
+        overlayJob?.cancel()
+        overlayJob = viewModelScope.launch {
+            supraFX.setLoadingState(state)
+            delay(durationMillis)
+            if (supraFX.overlayState.value == state) {
+                supraFX.setLoadingState(OverlayState.INACTIVE)
+            }
         }
     }
 
     fun showScanPrompt() {
-        viewModelScope.launch {
+        overlayJob?.cancel()
+        overlayJob = viewModelScope.launch {
             supraFX.setLoadingState(OverlayState.SCAN_PROMPT)
             delay(5000)
             if (supraFX.overlayState.value != OverlayState.INACTIVE) {
@@ -38,8 +48,21 @@ class SupraFXViewModel @Inject constructor(
     fun showScanPromptCustomContent(
         content: @Composable () -> Unit
     ) {
+        overlayJob?.cancel()
         supraFX.showScanPromptWithCustomContent(
             content = content
         )
+    }
+
+    fun showCustomContent(
+        content: @Composable () -> Unit
+    ) {
+        overlayJob?.cancel()
+        supraFX.showOverlayWithCustomContent(content)
+    }
+
+    fun dismissOverlay() {
+        overlayJob?.cancel()
+        supraFX.setLoadingState(OverlayState.INACTIVE)
     }
 }

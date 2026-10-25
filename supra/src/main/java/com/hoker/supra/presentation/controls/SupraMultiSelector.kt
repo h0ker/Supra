@@ -2,11 +2,13 @@ package com.hoker.supra.presentation.controls
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,15 +18,28 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.text.SupraBodyTextSmall
+import com.hoker.supra.presentation.theme.Ink4
+import com.hoker.supra.presentation.theme.Ink5
 import com.hoker.supra.utils.ColorUtils.contrastingTextColor
+import com.hoker.supra.utils.ColorUtils.inkOn
 
 enum class MultiSelectorOption {
     Option,
     Background
+}
+
+enum class MultiSelectorShape {
+    /** Hard-edged segments with mono uppercase labels. */
+    BLOCK,
+    /** The original rounded pill. */
+    PILL
 }
 
 @Composable
@@ -33,8 +48,9 @@ fun SupraMultiSelector(
     options: List<String>,
     selectedOption: String,
     onOptionSelect: (String) -> Unit,
+    shape: MultiSelectorShape = MultiSelectorShape.BLOCK,
     selectedBackgroundColor: Color = MaterialTheme.colorScheme.secondary,
-    unselectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    unselectedBackgroundColor: Color = if (shape == MultiSelectorShape.BLOCK) Color.Transparent else MaterialTheme.colorScheme.surface,
     state: MultiSelectorState = rememberMultiSelectorState(
         options = options,
         selectedOption = selectedOption,
@@ -52,15 +68,21 @@ fun SupraMultiSelector(
         state.selectOption(this, options.indexOf(selectedOption))
     }
 
+    val isBlock = shape == MultiSelectorShape.BLOCK
+
     Layout(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .background(unselectedBackgroundColor),
+            .clip(if (isBlock) SupraShapes.control else SupraShapes.pill)
+            .background(unselectedBackgroundColor)
+            .then(if (isBlock) Modifier.border(1.dp, Ink4, SupraShapes.control) else Modifier),
         content = {
-            options.forEachIndexed { index, option ->
+            options.forEach { option ->
                 val isSelected = option == selectedOption
-                val backgroundColor = if (isSelected) selectedBackgroundColor else unselectedBackgroundColor
-                val targetTextColor = backgroundColor.contrastingTextColor()
+                val targetTextColor = if (isBlock) {
+                    if (isSelected) selectedBackgroundColor.inkOn() else Ink5
+                } else {
+                    (if (isSelected) selectedBackgroundColor else unselectedBackgroundColor).contrastingTextColor()
+                }
                 val animatedTextColor by animateColorAsState(targetValue = targetTextColor)
                 Box(
                     modifier = Modifier
@@ -68,13 +90,26 @@ fun SupraMultiSelector(
                         .clickable { onOptionSelect(option) },
                     contentAlignment = Alignment.Center
                 ) {
-                    SupraBodyTextSmall(
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        text = option,
-                        color = animatedTextColor,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    if (isBlock) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            text = option.uppercase(),
+                            style = MaterialTheme.typography.labelMedium,
+                            letterSpacing = 0.12.em,
+                            textAlign = TextAlign.Center,
+                            color = animatedTextColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    } else {
+                        SupraBodyTextSmall(
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            text = option,
+                            color = animatedTextColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
 
@@ -82,12 +117,16 @@ fun SupraMultiSelector(
                 modifier = Modifier
                     .layoutId(MultiSelectorOption.Background)
                     .clip(
-                        shape = RoundedCornerShape(
-                            topStartPercent = state.startCornerPercent,
-                            bottomStartPercent = state.startCornerPercent,
-                            topEndPercent = state.endCornerPercent,
-                            bottomEndPercent = state.endCornerPercent
-                        )
+                        shape = if (isBlock) {
+                            SupraShapes.control
+                        } else {
+                            RoundedCornerShape(
+                                topStartPercent = state.startCornerPercent,
+                                bottomStartPercent = state.startCornerPercent,
+                                topEndPercent = state.endCornerPercent,
+                                bottomEndPercent = state.endCornerPercent
+                            )
+                        }
                     )
                     .background(selectedBackgroundColor)
             )

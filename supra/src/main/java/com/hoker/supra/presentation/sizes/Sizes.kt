@@ -17,7 +17,11 @@ object Sizes {
 
     //Pickers
     val defaultDropdownPickerWidth = 400.dp
-    val defaultDropdownPickerHeight = 64.dp
+    val defaultDropdownPickerHeight = 48.dp
+
+    //Controls: text field, picker, button. 44dp is the floor
+    val controlHeight = 48.dp
+    val dropdownHeight = 48.dp
 
     //Padding
     val defaultPadding = 16.dp
@@ -27,4 +31,8 @@ object Sizes {
     val defaultListItemWidth = 200.dp
 
     val defaultCornerRadius = 16.dp
+
+    //Row content insets. Glyphs fill their icon boxes, so the trailing edge needs +2dp to look level
+    val rowInset = 16.dp
+    val rowInsetTrailing = 18.dp
 }

@@ -1,21 +1,16 @@
 package com.hoker.supraexample.presentation.screens
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,20 +18,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.center
 import androidx.compose.ui.unit.dp
-import com.hoker.supra.presentation.pickers.SupraDropdownPicker
+import com.hoker.supra.presentation.buttons.SupraHardwareButton
+import com.hoker.supra.presentation.list_items.SupraTextureListItem
+import com.hoker.supra.presentation.shapes.SupraShapes
 import com.hoker.supra.presentation.sizes.Sizes
-import com.hoker.supra.presentation.text.SupraBodyTextMedium
+import com.hoker.supra.presentation.theme.Ink1
+import com.hoker.supra.presentation.theme.Ink2
+import com.hoker.supra.presentation.theme.Ink3
+import com.hoker.supra.presentation.theme.Ink4
+import com.hoker.supra.presentation.theme.Ink5
+import com.hoker.supra.presentation.theme.Ink7
 import com.hoker.supra.presentation.theme.UiTheme
-import kotlin.math.atan2
+import com.hoker.supraexample.presentation.components.ScreenColumn
+import com.hoker.supraexample.presentation.components.SpecimenLabel
 import kotlin.math.roundToInt
-import kotlin.uuid.ExperimentalUuidApi
+
+private val neutralRamp = listOf(
+    "Ink1" to Ink1,
+    "Ink2" to Ink2,
+    "Ink3" to Ink3,
+    "Ink4" to Ink4,
+    "Ink5" to Ink5,
+    "Ink7" to Ink7
+)
 
 @Composable
 fun ColorScreen(
@@ -44,41 +51,93 @@ fun ColorScreen(
     onThemeStateChanged: (String) -> Unit
 ) {
 
-    var themeSelection by remember { mutableStateOf(themeInitialState) }
+    var themeSelection by remember { mutableStateOf(UiTheme.fromTitle(themeInitialState)) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Sizes.medium),
-        verticalArrangement = Arrangement.spacedBy(Sizes.medium),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    ScreenColumn {
+        SpecimenLabel(text = "Neutral ramp")
         Row(
             modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .height(40.dp)
+                .clip(SupraShapes.control)
+                .border(1.dp, Ink4, SupraShapes.control)
         ) {
-            SupraBodyTextMedium(
-                modifier = Modifier.padding(start = 16.dp),
-                text = "Theme"
-            )
-            SupraDropdownPicker(
-                modifier = Modifier
-                    .padding(start = 4.dp)
-                    .width(140.dp)
-                    .height(50.dp),
-                items = UiTheme.entries.map { it.title },
-                labelBackgroundColor = MaterialTheme.colorScheme.background,
-                selectedValue = themeSelection,
-                label = "Theme",
-                onTouchAction = {
-                }
-            ) { themeTitle ->
-                themeSelection = themeTitle
-                onThemeStateChanged(themeTitle)
+            neutralRamp.forEach { (_, color) ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .background(color)
+                )
             }
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            neutralRamp.forEach { (name, color) ->
+                Column(modifier = Modifier.weight(1f)) {
+                    SpecimenLabel(text = name)
+                    SpecimenLabel(text = color.toHex().removePrefix("#"))
+                }
+            }
+        }
+
+        SpecimenLabel(text = "Accent swap · applied live · accent = state only")
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Sizes.small)
+        ) {
+            UiTheme.entries.forEach { theme ->
+                val selected = theme == themeSelection
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable {
+                            themeSelection = theme
+                            onThemeStateChanged(theme.title)
+                        },
+                    verticalArrangement = Arrangement.spacedBy(Sizes.tiny)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .background(theme.accent, SupraShapes.control)
+                            .border(2.dp, if (selected) Ink7 else Color.Transparent, SupraShapes.control)
+                    )
+                    SpecimenLabel(text = theme.title)
+                }
+            }
+        }
+
+        SpecimenLabel(text = "Where the accent is legal")
+        SupraTextureListItem(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(Sizes.defaultListItemHeight),
+            title = "Spark 2 · Slot 1",
+            status = "Live",
+            live = true,
+            rightIconImageVector = Icons.Default.ChevronRight
+        )
+        SupraTextureListItem(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(Sizes.defaultListItemHeight),
+            title = "Spark 2 · Slot 2",
+            status = "—",
+            rightIconImageVector = Icons.Default.ChevronRight
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SpecimenLabel(
+                modifier = Modifier.weight(1f),
+                text = "The one committing button"
+            )
+            SupraHardwareButton(
+                text = "Commit",
+                onClick = {}
+            )
         }
     }
 }

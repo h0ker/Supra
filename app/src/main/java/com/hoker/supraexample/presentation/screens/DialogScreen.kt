@@ -1,54 +1,61 @@
 package com.hoker.supraexample.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import com.hoker.supra.presentation.buttons.SupraButtonTone
+import com.hoker.supra.presentation.buttons.SupraHardwareButton
 import com.hoker.supra.presentation.dialogs.SupraMultiSelectionDialog
-import com.hoker.supra.presentation.sizes.Sizes
+import com.hoker.supra.presentation.theme.DataBlue
+import com.hoker.supraexample.presentation.components.ScreenColumn
+import com.hoker.supraexample.presentation.components.SpecimenLabel
 
 @Composable
 fun DialogScreen() {
 
     var showMultiSelectionDialog by remember { mutableStateOf(false) }
+    var selection by remember { mutableStateOf<String?>(null) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Sizes.medium),
-        verticalArrangement = Arrangement.spacedBy(Sizes.medium)
-    ) {
-        Button(
+    ScreenColumn {
+        SupraHardwareButton(
+            text = "Choose slot",
+            tone = SupraButtonTone.NEUTRAL,
             onClick = {
                 showMultiSelectionDialog = true
             }
-        ) {
-            Text(
-                text = "Show Multi-selection Dialog"
-            )
-        }
+        )
+
+        SpecimenLabel(text = "Selected slot")
+        Text(
+            text = selection ?: "—",
+            style = MaterialTheme.typography.labelMedium,
+            color = DataBlue
+        )
 
         SupraMultiSelectionDialog(
             showDialog = showMultiSelectionDialog,
             onDismiss = {
                 showMultiSelectionDialog = false
             },
-            description = "Example description",
-            firstOptionText = "First Option",
-            onFirstOptionClicked = {},
-            secondOptionText = "Second Option",
-            onSecondOptionClicked = {},
-            thirdOptionText = "Third Option",
-            onThirdOptionClicked = {}
+            description = "Write key to which slot?",
+            firstOptionText = "Slot 1",
+            onFirstOptionClicked = {
+                selection = "Slot 1"
+                showMultiSelectionDialog = false
+            },
+            secondOptionText = "Slot 2",
+            onSecondOptionClicked = {
+                selection = "Slot 2"
+                showMultiSelectionDialog = false
+            },
+            thirdOptionText = "Cancel",
+            onThirdOptionClicked = {
+                showMultiSelectionDialog = false
+            }
         )
     }
 }
